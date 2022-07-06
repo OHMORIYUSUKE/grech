@@ -15,7 +15,6 @@ def open_yaml(file_path: str) -> object:
 
 def main():
   args = sys.argv
-  # リリース時は0にする
   file_path = args[1]
   print(file_path)
   yaml_data = open_yaml(file_path=file_path)

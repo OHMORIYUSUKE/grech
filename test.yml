@@ -1,12 +1,16 @@
 name: OS-lecture-check
 
+config:
+  mysql_user: root
+  mysql_password: root
+
 check:
   cmd: ls -l
   regexp: ls -l | grep -E '.......r.x' | grep "\.html"
   message: |
     エラー
     ここに注目
-    cmd: ls -l
+  cmd: ls -l
   regexp: ls -l | grep -E '.......r.x' | grep "\.html"
   message: |
     エラー

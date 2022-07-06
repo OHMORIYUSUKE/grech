@@ -14,6 +14,13 @@ $ pip install /src/app/OS-lecture-Support-tool/dist/OS_lecture_Support_tool-0.1.
 $ os_lecture_support_tool
 ```
 
+# pip
+
+```sh
+$ pip install https://github.com/OHMORIYUSUKE/OS-lecture-Support-tool/blob/release/OS_lecture_Support_tool-0.1.0-py3-none-any.whl?raw=true
+$ pip uninstall https://github.com/OHMORIYUSUKE/OS-lecture-Support-tool/blob/release/OS_lecture_Support_tool-0.1.0-py3-none-any.whl?raw=true
+```
+
 ## 参考
 
 https://cocoatomo.github.io/poetry-ja/pyproject/
