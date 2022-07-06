@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env:
+  PROJECT_DIR: OS-lecture-Support-tool
+
 jobs:
   ci:
     strategy:
@@ -29,11 +32,11 @@ jobs:
         run: ls
       - name: build
         run: |
-          cd src/OS-lecture-Support-tool/
+          cd src/${{ env.PROJECT_DIR }}/
           poetry build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./src/OS-lecture-Support-tool/dist
+          publish_dir: ./src/${{ env.PROJECT_DIR }}/dist
           publish_branch: release
