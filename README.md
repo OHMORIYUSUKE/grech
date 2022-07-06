@@ -26,3 +26,5 @@ $ pip uninstall https://github.com/OHMORIYUSUKE/OS-lecture-Support-tool/blob/rel
 https://cocoatomo.github.io/poetry-ja/pyproject/
 
 https://qiita.com/SaitoTsutomu/items/a5eb827737c9d59af2af
+
+https://qiita.com/SaitoTsutomu/items/a5eb827737c9d59af2af
