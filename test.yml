@@ -5,13 +5,33 @@ config:
   mysql_password: root
 
 check:
-  cmd: ls -l
-  regexp: ls -l | grep -E '.......r.x' | grep "\.html"
-  message: |
-    エラー
-    ここに注目
-  cmd: ls -l
-  regexp: ls -l | grep -E '.......r.x' | grep "\.html"
-  message: |
-    エラー
-    ここに注目
+  capter: 1
+    name: 01-権限を確認
+      cmd: ls -l
+      regexp: [.......r.x]
+      working-directory: /var/www
+      message: |
+        エラー
+        ここに注目１
+    name: 02-権限を確認
+      cmd: ls -l
+      regexp: [.......r.x, \.html]
+      working-directory: /var/www
+      message: |
+        エラー
+        ここに注目２
+  capter: 2
+    name: 01-権限を確認
+      cmd: ls -l
+      regexp: [.......r.x]
+      working-directory: /var/www
+      message: |
+        エラー
+        ここに注目１
+    name: 02-権限を確認
+      cmd: ls -l
+      regexp: [.......r.x, \.html]
+      working-directory: /var/www
+      message: |
+        エラー
+        ここに注目２

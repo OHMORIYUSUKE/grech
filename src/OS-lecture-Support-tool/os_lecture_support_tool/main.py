@@ -3,6 +3,8 @@ import sys
 import configparser
 import os
 import yaml
+import asyncio
+from termcolor import colored
 
 from os_lecture_support_tool.lib.lib import Lib
 
@@ -33,13 +35,17 @@ class Check:
             new_dir_path = "/etc/os_lecture_support_tool"
             config = configparser.ConfigParser()
             config.read(f'{new_dir_path}/config.ini')
+            obj = Lib().open_yaml(file_path=config['user']['yaml'])
         except:
             print("設定が読み込めませんでした。")
             sys.exit(1)
-        obj = Lib().open_yaml(file_path=config['user']['yaml'])
         yaml_data = yaml.safe_load(obj)
         print(yaml_data["name"])
-        print(yaml_data["config"])
+        print(yaml_data)
+        # 確認
+        command_response = Lib().check_status(command="cd .. && ls -l", regexp=".......r.x")
+        print(command_response["out"])
+        print(command_response["error"])
         sys.exit(0)
     def chapter(self, n=1):
         """任意のチャプターまで終了しているか確認します。(--n {チャプター番号})"""
