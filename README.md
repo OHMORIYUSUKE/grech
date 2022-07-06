@@ -3,6 +3,7 @@
 ```sh
 $ docker exec -it OS-lecture-Support-tool bash
 $ poetry install
+$ poetry run start
 ```
 
 ## 参考
