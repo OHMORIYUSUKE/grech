@@ -3,7 +3,7 @@
 ```sh
 $ docker exec -it OS-lecture-Support-tool bash
 $ poetry install
-$ poetry run start
+$ poetry run os_lecture_support_tool
 ```
 
 # リリース
@@ -17,3 +17,5 @@ $ os_lecture_support_tool
 ## 参考
 
 https://cocoatomo.github.io/poetry-ja/pyproject/
+
+https://qiita.com/SaitoTsutomu/items/a5eb827737c9d59af2af

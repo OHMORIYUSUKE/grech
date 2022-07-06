@@ -1,0 +1,13 @@
+name: OS-lecture-check
+
+check:
+  cmd: ls -l
+  regexp: ls -l | grep -E '.......r.x' | grep "\.html"
+  message: |
+    エラー
+    ここに注目
+    cmd: ls -l
+  regexp: ls -l | grep -E '.......r.x' | grep "\.html"
+  message: |
+    エラー
+    ここに注目
