@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "OS-lecture-Support-tool"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+packages = [
+    { include = "os_lecture_support_tool" },
+    { include = "os_lecture_support_tool/**/*.py" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry>=1.00", "setuptools"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+start = "os_lecture_support_tool.main:main"

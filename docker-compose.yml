@@ -1,0 +1,10 @@
+version: "3.0"
+
+services:
+  app:
+    build: ./src
+    container_name: OS-lecture-Support-tool
+    restart: always
+    tty: true
+    volumes:
+      - ./src:/src/app
