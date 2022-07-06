@@ -40,8 +40,7 @@ class Check:
             print("設定が読み込めませんでした。")
             sys.exit(1)
         yaml_data = yaml.safe_load(obj)
-        print(yaml_data["name"])
-        print(yaml_data)
+        # print(yaml_data)
         # 確認
         command_response = Lib().check_status(command="cd .. && ls -l", regexp=".......r.x")
         print(command_response["out"])
