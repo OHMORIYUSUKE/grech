@@ -2,7 +2,6 @@
 
 ```sh
 $ docker exec -it OS-lecture-Support-tool bash
-$ cd OS-lecture-Support-tool/
 $ poetry install
 ```
 
