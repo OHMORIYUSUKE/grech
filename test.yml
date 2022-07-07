@@ -5,30 +5,30 @@ config:
   mysql_password: root
 
 check:
-  capter: 1
-    name: 01-権限を確認
+  capter_01:
+    - name: 01
       cmd: ls -l
       regexp: [.......r.x]
       working-directory: /var/www
       message: |
         エラー
         ここに注目１
-    name: 02-権限を確認
+    - name: 02
       cmd: ls -l
       regexp: [.......r.x, \.html]
       working-directory: /var/www
       message: |
         エラー
         ここに注目２
-  capter: 2
-    name: 01-権限を確認
+  capter_02:
+    - name: 01
       cmd: ls -l
       regexp: [.......r.x]
       working-directory: /var/www
       message: |
         エラー
         ここに注目１
-    name: 02-権限を確認
+    - name: 02
       cmd: ls -l
       regexp: [.......r.x, \.html]
       working-directory: /var/www
