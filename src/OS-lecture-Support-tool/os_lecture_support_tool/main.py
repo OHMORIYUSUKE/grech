@@ -55,18 +55,27 @@ class Check:
             print(data)
             for data2 in yaml_data["check"][data]:
                 # 確認
+                print("=====================================================")
                 print(data2["name"])
                 regexp_string = ""
-                if data2["regexp"]["type"] == "and":
-                    for i, data3 in enumerate(data2["regexp"]["list"]):
+                if data2["regexp"][0]["type"] == "and":
+                    regexp_string = ""
+                    for i, data3 in enumerate(data2["regexp"][1]["list"]):
                         regexp_string = regexp_string + " | grep " + data3
-                elif data2["regexp"]["type"] == "or":
-                    for i, data3 in enumerate(data2["regexp"]["list"]):
-                        regexp_string = regexp_string + " grep -e " + data3
+                elif data2["regexp"][0]["type"] == "or":
+                    regexp_string = " | grep"
+                    for i, data3 in enumerate(data2["regexp"][1]["list"]):
+                        regexp_string = regexp_string + " -e " + data3
                 command_response = Lib().check_status(command=data2["cmd"], regexp=regexp_string)
                 print(command_response["run_cmd"])
                 print(command_response["out"])
                 print(command_response["error"])
+                if command_response["out"]:
+                    print(colored(f"{data}の{data2['name']}\nよくできました!", "blue"))
+                else:
+                    print(colored(f"{data}の{data2['name']}\n間違っています...\n", "red"))
+                    print(colored(f"💡ヒント💡\n{data2['message']}", "yellow"), end="")
+                print("=====================================================")
         sys.exit(0)
     def chapter(self, n=1):
         """任意のチャプターまで終了しているか確認します。(--n {チャプター番号})"""
