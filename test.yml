@@ -6,31 +6,39 @@ config:
 
 check:
   capter_01:
-    - name: 01
+    - name: パーミッションを確認１
       cmd: ls -l
-      regexp: [.......r.x]
+      regexp:
+        - type: or
+        - list: [.......r.x]
       working-directory: /var/www
       message: |
         エラー
         ここに注目１
-    - name: 02
+    - name: パーミッションを確認２
       cmd: ls -l
-      regexp: [.......r.x, \.html]
+      regexp:
+        - type: and
+        - list: [.......r.x, index\.html]
       working-directory: /var/www
       message: |
         エラー
         ここに注目２
   capter_02:
-    - name: 01
+    - name: パーミッションを確認１
       cmd: ls -l
-      regexp: [.......r.x]
+      regexp:
+        - type: and
+        - list: [.......r.x]
       working-directory: /var/www
       message: |
         エラー
         ここに注目１
-    - name: 02
+    - name: パーミッションを確認２
       cmd: ls -l
-      regexp: [.......r.x, \.html]
+      regexp:
+        - type: or
+        - list: [.......r.x, index\.html]
       working-directory: /var/www
       message: |
         エラー
