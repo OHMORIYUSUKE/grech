@@ -6,6 +6,8 @@ import yaml
 import asyncio
 from termcolor import colored
 import json
+from tabulate import tabulate
+import re
 
 from os_lecture_support_tool.lib.lib import Lib
 
@@ -32,14 +34,14 @@ class Config:
         config = configparser.ConfigParser()
         config.read(f'{new_dir_path}/config.ini')
         try:
-            print(f'yaml:{config["user"]["yaml"]}')
+            print(f'設定済みの項目を表示します。\nyaml => {config["user"]["yaml"]}')
         except:
             print("設定がされていません。")
             sys.exit(1)
 
 class Check:
     """課題の状態を確認することができます。"""
-    def all(self):
+    def all(self, out=0):
         """すべての課題が終了しているか確認します。"""
         try:
             new_dir_path = "/etc/os_lecture_support_tool"
@@ -50,13 +52,18 @@ class Check:
             print("設定が読み込めませんでした。")
             sys.exit(1)
         yaml_data = yaml.safe_load(obj)
+        result_table_data = []
+        result_name_list = []
+        result_cmd_list = []
+        result_message_list = []
         # print(json.dumps(yaml_data, indent = 2, ensure_ascii=False))
+        print(colored("結果", "green"))
         for data in yaml_data["check"].keys():
-            print(data)
+            result_name_list.append(data)
+            result_cmd_list.append("")
+            result_message_list.append("")
             for data2 in yaml_data["check"][data]:
-                # 確認
-                print("=====================================================")
-                print(data2["name"])
+                result_name_list.append(data2["name"])
                 regexp_string = ""
                 if data2["regexp"][0]["type"] == "and":
                     regexp_string = ""
@@ -67,18 +74,32 @@ class Check:
                     for i, data3 in enumerate(data2["regexp"][1]["list"]):
                         regexp_string = regexp_string + " -e " + data3
                 command_response = Lib().check_status(command=data2["cmd"], regexp=regexp_string)
-                print(command_response["run_cmd"])
-                print(command_response["out"])
-                print(command_response["error"])
-                if command_response["out"]:
-                    print(colored(f"{data}の{data2['name']}\nよくできました!", "blue"))
+                if out:
+                    result_cmd_list.append("$ " + command_response["run_cmd"] + "\n" + command_response["out"] + command_response["error"])
                 else:
-                    print(colored(f"{data}の{data2['name']}\n間違っています...\n", "red"))
-                    print(colored(f"💡ヒント💡\n{data2['message']}", "yellow"), end="")
-                print("=====================================================")
+                    result_cmd_list.append("")
+                if command_response["out"]:
+                    result_message_list.append(colored(f"よくできました!", "green"))
+                else:
+                    result_message_list.append(colored(f"間違っています...\n\n💡ヒント💡\n{data2['message']}", "red"))
+        if result_cmd_list[1] == "":
+            result_table_data = {"項目": result_name_list, "メッセージ": result_message_list}
+        else:
+            result_table_data = {"項目": result_name_list,"コマンド": result_cmd_list,"メッセージ": result_message_list}
+        print(tabulate(result_table_data, headers="keys", tablefmt='fancy_grid'))
         sys.exit(0)
     def chapter(self, n=1):
         """任意のチャプターまで終了しているか確認します。(--n {チャプター番号})"""
+        ENV_PATTERN = re.compile(r'\$\{(.*)\}')
+        ENV_TAG = '!env_var'
+        yaml.add_constructor(ENV_TAG, Lib().env_var_constructor, yaml.SafeLoader)
+        yaml.add_implicit_resolver(ENV_TAG, ENV_PATTERN, None, yaml.SafeLoader)
+        example = """
+        a: ${EXAMPLE_A:default}
+        b: ${EXAMPLE_B:default}
+        """
+        os.environ["EXAMPLE_A"]="from_env"
+        print(yaml.safe_load(example))
         return n
 
 class Command:
