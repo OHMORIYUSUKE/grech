@@ -1,54 +1,71 @@
-name: OS-lecture-check
-
-config:
-  MYSQL_USER: root
-  MYSQL_PASSWORD: pass
-
+---
 check:
   capter_01:
-    - name: パーミッションを確認１
-      cmd: [ls, -l]
-      regexp:
-        - type: or
-        - list: [.......r.x]
-      working-directory: /var/www
+    - cmd:
+        - ls
+        - "-l"
       message: |
         エラー
         ここに注目１
-    - name: パーミッションを確認２
-      cmd: [ls, -l]
+      name: パーミッションを確認１
       regexp:
-        - type: and
-        - list: [.......r.x, index\.html]
+        - type: or
+        - list:
+            - ".......r.x"
       working-directory: /var/www
+    - cmd:
+        - ls
+        - "-l"
       message: |
         エラー
         ここに注目２
+      name: パーミッションを確認２
+      regexp:
+        - type: and
+        - list:
+            - ".......r.x"
+            - index\.html
+      working-directory: /var/www
   capter_02:
-    - name: パーミッションを確認１
-      cmd: [ls, -l]
-      regexp:
-        - type: and
-        - list: [.......r.x]
-      working-directory: /var/www
+    - cmd:
+        - ls
+        - "-l"
       message: |
         エラー
         ここに注目１
-    - name: パーミッションを確認２
-      cmd: [ls, -l]
+      name: パーミッションを確認１
       regexp:
-        - type: or
-        - list: [.......r.x, index\.html]
+        - type: and
+        - list:
+            - ".......r.x"
       working-directory: /var/www
+    - cmd:
+        - ls
+        - "-l"
       message: |
         エラー
         ここに注目２
-    - name: configを確認
-      cmd: [echo, ${MYSQL_USER}]
+      name: パーミッションを確認２
       regexp:
         - type: or
-        - list: [......., index\.html]
+        - list:
+            - ".......r.x"
+            - index\.html
       working-directory: /var/www
+    - cmd:
+        - echo
+        - "${MYSQL_USER}"
       message: |
         エラー
         ここに注目２
+      name: configを確認
+      regexp:
+        - type: or
+        - list:
+            - "......."
+            - index\.html
+      working-directory: /var/www
+config:
+  MYSQL_PASSWORD: pass
+  MYSQL_USER: root
+name: OS-lecture-check
