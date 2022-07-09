@@ -16,9 +16,16 @@ class Config:
     def yaml(self, file):
         """チェックする項目が記載されたYAMLファイルの場所を設定します。 --set {URL}"""
         config = configparser.ConfigParser()
-        config['user'] = {
-            'yaml': file
-        }
+        config_list = {'yaml': file}
+        new_dir_path = "/etc/os_lecture_support_tool"
+        config.read(f'{new_dir_path}/config.ini')
+        obj = Lib().open_yaml(file_path=config['user']['yaml'])
+        yaml_data = yaml.safe_load(obj)
+        print(yaml_data["config"])
+        for data in yaml_data["config"]:
+            config_string = input(f"{data}を入力してください:")
+            config_list[data] = config_string
+        config['user'] = config_list
         try:
             new_dir_path = "/etc/os_lecture_support_tool"
             if not os.path.exists(new_dir_path):
@@ -34,7 +41,9 @@ class Config:
         config = configparser.ConfigParser()
         config.read(f'{new_dir_path}/config.ini')
         try:
-            print(f'設定済みの項目を表示します。\nyaml => {config["user"]["yaml"]}')
+            print(f'設定済みの項目を表示します。')
+            for data in config["user"]:
+                print(f"{data} => {config['user'][data]}")
         except:
             print("設定がされていません。")
             sys.exit(1)
@@ -90,15 +99,25 @@ class Check:
         sys.exit(0)
     def chapter(self, n=1):
         """任意のチャプターまで終了しているか確認します。(--n {チャプター番号})"""
+        try:
+            new_dir_path = "/etc/os_lecture_support_tool"
+            config = configparser.ConfigParser()
+            config.read(f'{new_dir_path}/config.ini')
+            obj = Lib().open_yaml(file_path=config['user']['yaml'])
+        except:
+            print("設定が読み込めませんでした。")
+            sys.exit(1)
+        yaml_data = yaml.safe_load(obj)
         ENV_PATTERN = re.compile(r'\$\{(.*)\}')
         ENV_TAG = '!env_var'
         yaml.add_constructor(ENV_TAG, Lib().env_var_constructor, yaml.SafeLoader)
         yaml.add_implicit_resolver(ENV_TAG, ENV_PATTERN, None, yaml.SafeLoader)
         example = """
-        a: ${EXAMPLE_A:default}
-        b: ${EXAMPLE_B:default}
+        a: ${MYSQL_USER}
+        b: ${MYSQL_PASSWORD}
         """
-        os.environ["EXAMPLE_A"]="from_env"
+        os.environ["MYSQL_USER"]="root"
+        # os.environ["MYSQL_PASSWORD"]="pass"
         print(yaml.safe_load(example))
         return n
 

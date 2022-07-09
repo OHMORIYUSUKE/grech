@@ -1,8 +1,8 @@
 name: OS-lecture-check
 
 config:
-  mysql_user: root
-  mysql_password: root
+  MYSQL_USER: root
+  MYSQL_PASSWORD: root
 
 check:
   capter_01:
@@ -39,6 +39,15 @@ check:
       regexp:
         - type: or
         - list: [.......r.x, index\.html]
+      working-directory: /var/www
+      message: |
+        エラー
+        ここに注目２
+    - name: configを確認
+      cmd: echo ${MYSQL_USER}
+      regexp:
+        - type: or
+        - list: [......., index\.html]
       working-directory: /var/www
       message: |
         エラー
