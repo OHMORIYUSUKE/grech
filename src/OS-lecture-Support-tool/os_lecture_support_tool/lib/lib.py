@@ -32,17 +32,10 @@ class Lib:
         if matched is None:
             return value
         proto = matched.group(1)
-        default = None
         new_dir_path = "/etc/os_lecture_support_tool"
         config = configparser.ConfigParser()
         config.read(f'{new_dir_path}/config.ini')
         obj = Lib().open_yaml(file_path=config['user']['yaml'])
         yaml_data = yaml.safe_load(obj)
-        for data in yaml_data["config"]:
-            print(yaml_data["config"][data])
-        if len(proto.split(':')) > 1:
-            env_key, default = proto.split(':')
-        else:
-            env_key = proto
-        env_val = os.environ[env_key] if env_key in os.environ else default 
+        env_val = os.environ[proto] if proto in os.environ else yaml_data["config"][proto]
         return env_val

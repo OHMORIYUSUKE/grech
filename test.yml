@@ -7,7 +7,7 @@ config:
 check:
   capter_01:
     - name: パーミッションを確認１
-      cmd: ls -l
+      cmd: [ls, -l]
       regexp:
         - type: or
         - list: [.......r.x]
@@ -16,7 +16,7 @@ check:
         エラー
         ここに注目１
     - name: パーミッションを確認２
-      cmd: ls -l
+      cmd: [ls, -l]
       regexp:
         - type: and
         - list: [.......r.x, index\.html]
@@ -26,7 +26,7 @@ check:
         ここに注目２
   capter_02:
     - name: パーミッションを確認１
-      cmd: ls -l
+      cmd: [ls, -l]
       regexp:
         - type: and
         - list: [.......r.x]
@@ -35,7 +35,7 @@ check:
         エラー
         ここに注目１
     - name: パーミッションを確認２
-      cmd: ls -l
+      cmd: [ls, -l]
       regexp:
         - type: or
         - list: [.......r.x, index\.html]
@@ -44,7 +44,7 @@ check:
         エラー
         ここに注目２
     - name: configを確認
-      cmd: echo ${MYSQL_USER}
+      cmd: [echo, ${MYSQL_USER}]
       regexp:
         - type: or
         - list: [......., index\.html]

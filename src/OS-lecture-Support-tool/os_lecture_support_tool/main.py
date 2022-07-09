@@ -113,13 +113,70 @@ class Check:
         yaml.add_constructor(ENV_TAG, Lib().env_var_constructor, yaml.SafeLoader)
         yaml.add_implicit_resolver(ENV_TAG, ENV_PATTERN, None, yaml.SafeLoader)
         example = """
-        a: ${MYSQL_USER}
-        b: ${MYSQL_PASSWORD}
+name: OS-lecture-check
+
+config:
+  MYSQL_USER: root
+  MYSQL_PASSWORD: pass
+
+check:
+  capter_01:
+    - name: パーミッションを確認１
+      cmd: ls -l
+      regexp:
+        - type: or
+        - list: [.......r.x]
+      working-directory: /var/www
+      message: |
+        エラー
+        ここに注目１
+    - name: パーミッションを確認２
+      cmd: ls -l
+      regexp:
+        - type: and
+        - list: [.......r.x, index\.html]
+      working-directory: /var/www
+      message: |
+        エラー
+        ここに注目２
+  capter_02:
+    - name: パーミッションを確認１
+      cmd: ls -l
+      regexp:
+        - type: and
+        - list: [.......r.x]
+      working-directory: /var/www
+      message: |
+        エラー
+        ここに注目１
+    - name: パーミッションを確認２
+      cmd: ls -l
+      regexp:
+        - type: or
+        - list: [.......r.x, index\.html]
+      working-directory: /var/www
+      message: |
+        エラー
+        ここに注目２
+    - name: configを確認
+      cmd: ${MYSQL_USER}
+      regexp:
+        - type: or
+        - list: [......., index\.html]
+      working-directory: /var/www
+      message: |
+        エラー
+        ここに注目２
         """
-        os.environ["MYSQL_USER"]="root"
-        # os.environ["MYSQL_PASSWORD"]="pass"
+        # os.environ["MYSQL_USER"]="root"
+        # os.environ["MYSQL_PASSWORD"]="password"
+        for data in yaml_data["config"]:
+            new_dir_path = "/etc/os_lecture_support_tool"
+            config = configparser.ConfigParser()
+            config.read(f'{new_dir_path}/config.ini')
+            os.environ[data] = config["user"][data]
         print(yaml.safe_load(example))
-        return n
+        
 
 class Command:
     config = Config
