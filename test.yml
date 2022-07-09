@@ -2,7 +2,7 @@ name: OS-lecture-check
 
 config:
   MYSQL_USER: root
-  MYSQL_PASSWORD: root
+  MYSQL_PASSWORD: pass
 
 check:
   capter_01:
