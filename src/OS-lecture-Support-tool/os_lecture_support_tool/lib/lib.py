@@ -24,18 +24,18 @@ class Lib:
         proc = subprocess.run(f"{command} {regexp}", timeout=100, shell=True, stdout=PIPE, stderr=PIPE, text=True)
         return {'out': proc.stdout,'error': proc.stderr, 'run_cmd': run_cmd}
 
-    def env_var_constructor(self, loader, node):
-        ENV_PATTERN = re.compile(r'\$\{(.*)\}')
-        ENV_TAG = '!env_var'
-        value = loader.construct_scalar(node)
-        matched = ENV_PATTERN.match(value)
-        if matched is None:
-            return value
-        proto = matched.group(1)
-        new_dir_path = "/etc/os_lecture_support_tool"
-        config = configparser.ConfigParser()
-        config.read(f'{new_dir_path}/config.ini')
-        obj = Lib().open_yaml(file_path=config['user']['yaml'])
+    def change_env_value(self, command=""):
+        try:
+            new_dir_path = "/etc/os_lecture_support_tool"
+            config = configparser.ConfigParser()
+            config.read(f'{new_dir_path}/config.ini')
+            obj = Lib().open_yaml(file_path=config['user']['yaml'])
+        except:
+            print("設定が読み込めませんでした。")
+            sys.exit(1)
         yaml_data = yaml.safe_load(obj)
-        env_val = os.environ[proto] if proto in os.environ else yaml_data["config"][proto]
-        return env_val
+        for config_data in yaml_data["config"]:
+            if config_data in command:
+                return re.sub('\$\{(.*)\}', config['user'][config_data], command)
+            else:
+                return command

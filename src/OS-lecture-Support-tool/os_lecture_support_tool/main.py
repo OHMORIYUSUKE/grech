@@ -82,7 +82,7 @@ class Check:
                     regexp_string = " | grep"
                     for i, data3 in enumerate(data2["regexp"][1]["list"]):
                         regexp_string = regexp_string + " -e " + data3
-                command_response = Lib().check_status(command=data2["cmd"], regexp=regexp_string)
+                command_response = Lib().check_status(command=Lib().change_env_value(data2["cmd"]), regexp=Lib().change_env_value(regexp_string))
                 if out:
                     result_cmd_list.append("$ " + command_response["run_cmd"] + "\n" + command_response["out"] + command_response["error"])
                 else:
@@ -111,14 +111,7 @@ class Check:
         ENV_PATTERN = re.compile(r'\$\{(.*)\}')
         for data in yaml_data["check"].keys():
             for data2 in yaml_data["check"][data]:
-                for cmd in data2["cmd"]:
-                    print(cmd)
-                    print(re.sub('\$\{(.*)\}', 'root', cmd))
-                    if "MYSQL_USER" in cmd:
-                        print(re.sub('\$\{(.*)\}', 'root', cmd))
-                    elif "MYSQL_PASS" in cmd:
-                        print(re.sub('\$\{(.*)\}', 'pass', cmd))
-        
+                print(Lib().change_env_value(data2["cmd"]))
 
 class Command:
     config = Config
