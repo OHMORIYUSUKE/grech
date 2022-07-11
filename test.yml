@@ -47,7 +47,7 @@ check:
       cmd: echo ${MYSQL_USER}
       regexp:
         - type: or
-        - list: [${MYSQL_USER}]
+        - list: ["${MYSQL_USER}"]
       working-directory: /var/www
       message: |
         エラー
