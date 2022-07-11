@@ -19,9 +19,12 @@ class Lib:
             print(stderrout)
             sys.exit(1)
     
-    def check_status(self, command="", regexp="") -> object:
-        run_cmd = f"{command} {regexp}"
-        proc = subprocess.run(f"{command} {regexp}", timeout=100, shell=True, stdout=PIPE, stderr=PIPE, text=True)
+    def check_status(self,working_directory="", command="", regexp="") -> object:
+        if working_directory == "":
+            run_cmd = f"{command} {regexp}"
+        else:
+            run_cmd = f"cd {working_directory} && {command} {regexp}"
+        proc = subprocess.run(f"{run_cmd}", timeout=100, shell=True, stdout=PIPE, stderr=PIPE, text=True)
         return {'out': proc.stdout,'error': proc.stderr, 'run_cmd': run_cmd}
 
     def change_env_value(self, command=""):
