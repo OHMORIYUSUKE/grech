@@ -109,17 +109,15 @@ class Check:
             sys.exit(1)
         yaml_data = yaml.safe_load(obj)
         ENV_PATTERN = re.compile(r'\$\{(.*)\}')
-        ENV_TAG = '!env_var'
-        yaml.add_constructor(ENV_TAG, Lib().env_var_constructor, yaml.SafeLoader)
-        yaml.add_implicit_resolver(ENV_TAG, ENV_PATTERN, None, yaml.SafeLoader)
-        # os.environ["MYSQL_USER"]="root"
-        # os.environ["MYSQL_PASSWORD"]="password"
-        for data in yaml_data["config"]:
-            new_dir_path = "/etc/os_lecture_support_tool"
-            config = configparser.ConfigParser()
-            config.read(f'{new_dir_path}/config.ini')
-            os.environ[data] = config["user"][data]
-        print(yaml.safe_load(obj))
+        for data in yaml_data["check"].keys():
+            for data2 in yaml_data["check"][data]:
+                for cmd in data2["cmd"]:
+                    print(cmd)
+                    print(re.sub('\$\{(.*)\}', 'root', cmd))
+                    if "MYSQL_USER" in cmd:
+                        print(re.sub('\$\{(.*)\}', 'root', cmd))
+                    elif "MYSQL_PASS" in cmd:
+                        print(re.sub('\$\{(.*)\}', 'pass', cmd))
         
 
 class Command:
