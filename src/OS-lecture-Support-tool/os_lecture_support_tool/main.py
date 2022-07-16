@@ -98,7 +98,7 @@ class Check:
         score = 0
         table_score = Table(title="スコア", show_lines=True)
         table_score.add_column("チャプター", justify="right", style="white", no_wrap=True)
-        table_score.add_column("項目", style="cyan", no_wrap=True)
+        table_score.add_column("確認項目", style="cyan", no_wrap=True)
         table_score.add_column("スコア", justify="right", style="green", no_wrap=True)
         # 
         yaml_data = yaml.safe_load(obj)
