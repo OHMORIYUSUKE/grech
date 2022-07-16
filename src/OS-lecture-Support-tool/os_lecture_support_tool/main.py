@@ -5,8 +5,12 @@ import os
 import yaml
 import asyncio
 from termcolor import colored
+from rich.table import Column
+from rich.progress import Progress, BarColumn, TextColumn
+from rich.text import Text
+from rich.console import Console
+from rich.table import Table
 import json
-from tabulate import tabulate
 import re
 
 from os_lecture_support_tool.lib.lib import Lib
@@ -34,7 +38,7 @@ class Config:
                     print(colored("❗初回設定時は`os_lecture_support_tool config set {yamlのURL}`を実行してください❗", "red"))
                     sys.exit(1) 
         yaml_data = yaml.safe_load(obj)
-        print(colored("❗入力せずにEnterを入力した場合は、設定がすでに設定されている値に設定されます❗", "yellow"))
+        print(colored("❗入力せずにEnterを入力した場合は、すでに設定されている値に設定されます❗", "yellow"))
         for data in yaml_data["config"]:
             config_data = ""
             try:
@@ -63,22 +67,23 @@ class Config:
         new_dir_path = "/etc/os_lecture_support_tool"
         config = configparser.ConfigParser()
         config.read(f'{new_dir_path}/config.ini')
-        result_name = []
-        result_value = []
+        table = Table(title="設定内容", show_lines=True)
+        table.add_column("項目", justify="right", style="cyan", no_wrap=True)
+        table.add_column("値", style="magenta")
         try:
             for data in config["user"]:
-                result_name.append(data)
-                result_value.append(config['user'][data])
-                result_table_data = {"項目": result_name , "設定内容": result_value}
-            print(tabulate(result_table_data, headers="keys", tablefmt='fancy_grid'))
-            print(colored('設定済みの項目を表示しています。', 'green'))
+                result_name = data
+                result_value = config['user'][data]
+                table.add_row(result_name, result_value)
+            console = Console()
+            console.print(table)
         except:
             print(colored("設定がされていません。", 'red'))
             sys.exit(1)
 
 class Check:
     """課題の状態を確認することができます。"""
-    def all(self, out=0):
+    def all(self, debug=0):
         """すべての課題が終了しているか確認します。"""
         try:
             new_dir_path = "/etc/os_lecture_support_tool"
@@ -89,18 +94,19 @@ class Check:
             print("設定が読み込めませんでした。")
             sys.exit(1)
         yaml_data = yaml.safe_load(obj)
-        result_table_data = []
-        result_name_list = []
-        result_cmd_list = []
-        result_message_list = []
         # print(json.dumps(yaml_data, indent = 2, ensure_ascii=False))
-        print(colored("結果", "green"))
+        table = Table(title="結果", show_lines=True)
+        table.add_column("チャプター", justify="right", style="white", no_wrap=True)
+        table.add_column("項目", style="cyan", no_wrap=True)
+        if debug:
+            table.add_column("コマンド", style="magenta")
+        table.add_column("コメント", style="green", overflow="fold")
         for data in yaml_data["check"].keys():
-            result_name_list.append(data)
-            result_cmd_list.append("")
-            result_message_list.append("")
+            result_name = ""
+            result_cmd = ""
+            result_message = ""
             for data2 in yaml_data["check"][data]:
-                result_name_list.append(data2["name"])
+                result_name = data2["name"]
                 regexp_string = ""
                 if data2["regexp"][0]["type"] == "and":
                     regexp_string = ""
@@ -111,22 +117,24 @@ class Check:
                     for i, data3 in enumerate(data2["regexp"][1]["list"]):
                         regexp_string = regexp_string + " -e " + data3
                 command_response = Lib().check_status(working_directory=data2["working-directory"]  ,command=Lib().change_env_value(data2["cmd"]), regexp=Lib().change_env_value(regexp_string))
-                if out:
-                    result_cmd_list.append("$ " + command_response["run_cmd"] + "\n" + command_response["out"] + command_response["error"])
-                else:
-                    result_cmd_list.append("")
                 if command_response["out"]:
-                    result_message_list.append(colored(f"よくできました!", "green"))
+                    result_message = Text()
+                    result_message.append("よくできました!", style="bold green")
                 else:
-                    result_message_list.append(colored(f"間違っています...\n\n💡ヒント💡\n{data2['message']}", "red"))
-        if result_cmd_list[1] == "":
-            result_table_data = {"項目": result_name_list, "メッセージ": result_message_list}
-        else:
-            result_table_data = {"項目": result_name_list,"コマンド": result_cmd_list,"メッセージ": result_message_list}
-        print(tabulate(result_table_data, headers="keys", tablefmt='fancy_grid'))
+                    result_message = Text()
+                    result_message.append(f"間違っています...\n💡\n{data2['message']}", style="bold red")
+                if debug:
+                    result_cmd = "$ " + command_response["run_cmd"] + "\n" + command_response["out"] + command_response["error"]
+                    table.add_row(data, result_name, result_cmd, result_message)
+                else:
+                    table.add_row(data, result_name, result_message)
+        console = Console()
+        console.rule("fold")
+        console.print(table, overflow="fold")
         sys.exit(0)
-    def chapter(self, n=1):
-        """任意のチャプターまで終了しているか確認します。(--n {チャプター番号})"""
+
+    def chapter(self, name="", debug=0):
+        """任意のチャプターまで終了しているか確認します。(--n {チャプター名})"""
         try:
             new_dir_path = "/etc/os_lecture_support_tool"
             config = configparser.ConfigParser()
@@ -136,10 +144,44 @@ class Check:
             print("設定が読み込めませんでした。")
             sys.exit(1)
         yaml_data = yaml.safe_load(obj)
-        ENV_PATTERN = re.compile(r'\$\{(.*)\}')
+        # print(json.dumps(yaml_data, indent = 2, ensure_ascii=False))
+        table = Table(title=f"{name} までの結果", show_lines=True)
+        table.add_column("チャプター", justify="right", style="white", no_wrap=True)
+        table.add_column("項目", style="cyan", no_wrap=True)
+        if debug:
+            table.add_column("コマンド", style="magenta")
+        table.add_column("コメント", style="green", overflow="fold")
         for data in yaml_data["check"].keys():
+            result_name = ""
+            result_cmd = ""
+            result_message = ""
             for data2 in yaml_data["check"][data]:
-                print(Lib().change_env_value(data2["cmd"]))
+                result_name = data2["name"]
+                regexp_string = ""
+                if data2["regexp"][0]["type"] == "and":
+                    regexp_string = ""
+                    for i, data3 in enumerate(data2["regexp"][1]["list"]):
+                        regexp_string = regexp_string + " | grep " + data3
+                elif data2["regexp"][0]["type"] == "or":
+                    regexp_string = " | grep"
+                    for i, data3 in enumerate(data2["regexp"][1]["list"]):
+                        regexp_string = regexp_string + " -e " + data3
+                command_response = Lib().check_status(working_directory=data2["working-directory"]  ,command=Lib().change_env_value(data2["cmd"]), regexp=Lib().change_env_value(regexp_string))
+                if command_response["out"]:
+                    result_message = Text()
+                    result_message.append("よくできました!", style="bold green")
+                else:
+                    result_message = Text()
+                    result_message.append(f"間違っています...\n💡\n{data2['message']}", style="bold red")
+                if debug:
+                    result_cmd = "$ " + command_response["run_cmd"] + "\n" + command_response["out"] + command_response["error"]
+                    table.add_row(data, result_name, result_cmd, result_message)
+                else:
+                    table.add_row(data, result_name, result_message)
+            if name == data:
+                console = Console()
+                console.print(table)
+        sys.exit(0)
 
 class Command:
     config = Config
