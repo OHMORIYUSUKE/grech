@@ -10,19 +10,18 @@ config:
 # ユーザーの設定が正しいかを確認するためのシナリオ
 check:
   # chapter_01などの値は、シナリオ設定者が項目ごとに分割するために設定する
-  chapter_01:
+  capter_01:
     # chapter_01 内でテストする項目を記載する
     # name : 確認項目の名前
     - name: パーミッションを確認１
       # 確認するためのコマンド
-      cmd: ls -l
-      # 上記のコマンドの出力を正規表現で指定
+      cmd: echo "select * from webapp.product" | mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD}
+      # 複数の正規表現の「いずれかにマッチ」か「すべてにマッチ」を指定
+      # or または andを指定
       regexp:
-        # 複数の正規表現の「いずれかにマッチ」か「すべてにマッチ」を指定
-        # or または andを指定
         - type: or
         # 正規表現
-        - list: [.......r.x]
+        - list: [price, name]
       # 上記のコマンドを実行するディレクトリを指定
       working-directory: /var/www
       # 上記の正規表現にマッチしなかった場合に表示されるヒント(または模範回答)
@@ -38,7 +37,7 @@ check:
       message: |
         エラー
         ここに注目２
-  chapter_02:
+  capter_02:
     - name: パーミッションを確認１
       cmd: ls -l
       regexp:
@@ -55,8 +54,8 @@ check:
         - list: [.......r.x, index\.html]
       working-directory: /var/www
       message: |
-        エラー
-        ここに注目２
+        この項目を確認してみましょう。`chmod`コマンドを用いて解決できます。
+        https://cist-operating-system.netlify.app/os/ec2-tutorial/operation-table-mysql/
     - name: configを確認
       cmd: echo ${MYSQL_USER}
       regexp:
