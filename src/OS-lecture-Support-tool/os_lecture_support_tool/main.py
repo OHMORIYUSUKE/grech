@@ -113,6 +113,7 @@ class Check:
             result_cmd = ""
             result_message = ""
             score_sum = 0
+            score = 0
             score_name = ""
             for i ,data2 in enumerate(yaml_data["check"][data]):
                 result_name = data2["name"]
