@@ -39,5 +39,5 @@ class Lib:
         yaml_data = yaml.safe_load(obj)
         for config_data in yaml_data["config"]:
             if config_data in command:
-                command = re.sub('\$\{(' + config_data + ')\}', config['user'][config_data], command)
+                command = re.sub('\$\{( *' + config_data + ' *)\}', config['user'][config_data], command)
         return command
