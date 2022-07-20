@@ -11,6 +11,14 @@ config:
 check:
   # chapter_01などの値は、シナリオ設定者が項目ごとに分割するために設定する
   capter_01:
+    - name: Apacheがインストールできているか確認
+      cmd: apache2 -v
+      regexp:
+        - type: or
+        - list: ["Server version: Apache/"]
+      working-directory: /home/ubuntu
+      message: |
+        Apacheが正常にインストールできていない可能性があります。
     # chapter_01 内でテストする項目を記載する
     # name : 確認項目の名前
     - name: パーミッションを確認１
