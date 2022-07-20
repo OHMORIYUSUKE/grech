@@ -10,7 +10,7 @@ config:
 # ユーザーの設定が正しいかを確認するためのシナリオ
 check:
   # chapter_01などの値は、シナリオ設定者が項目ごとに分割するために設定する
-  capter_01:
+  Apache2:
     - name: Apacheがインストールできているか確認
       cmd: apache2 -v
       regexp:
@@ -19,57 +19,141 @@ check:
       working-directory: /home/ubuntu
       message: |
         Apacheが正常にインストールできていない可能性があります。
-    # chapter_01 内でテストする項目を記載する
-    # name : 確認項目の名前
-    - name: パーミッションを確認１
-      # 確認するためのコマンド
+    - name: Apacheが起動できているか確認1
+      cmd: curl localhost
+      regexp:
+        - type: or
+        - list: ["<!DOCTYPE html>"]
+      working-directory: /home/ubuntu
+      message: |
+        Apacheが起動していない可能性があります。
+        または、80番ポートが解放されていません。
+    - name: Apacheが起動できているか確認2
+      cmd: systemctl status apache2
+      regexp:
+        - type: or
+        - list: ["active (running)"]
+      working-directory: /home/ubuntu
+      message: |
+        Apacheが起動していない可能性があります。
+        または、80番ポートが解放されていません。
+  HTML:
+    - name: HTMLが編集できているか確認
+      cmd: cat index.html
+      regexp:
+        - type: or
+        - list: ["<h1>Hello World !</h1>"]
+      working-directory: /var/www/html
+      message: |
+        HTMLが編集できていません。
+  PHP_install:
+    - name: PHPがインストールできているか確認
+      cmd: php -v
+      regexp:
+        - type: or
+        - list: ["Copyright (c) The PHP Group"]
+      working-directory: /var/www/html
+      message: |
+        PHPがインストールできていません。
+  PHP:
+    - name: PHPのパーミッションを確認
+      cmd: ls -l
+      regexp:
+        - type: and
+        - list: [.......r.x, index\.php]
+      working-directory: /var/www/html
+      message: |
+        PHPファイルに適切な権限がない可能性があります。chmodコマンドを用いて権限を編集しましょう。
+    - name: PHPが公開できているか確認
+      cmd: cat index.php
+      regexp:
+        - type: or
+        - list: ["<?php"]
+      working-directory: /var/www/html
+      message: |
+        PHPファイルが/var/www/html内にないです。
+  MySQL_install:
+    - name: MySQLがインストールされているかを確認
+      cmd: mysql --version
+      regexp:
+        - type: or
+        - list: ["mysql  Ver"]
+      working-directory: /var/www/html
+      message: |
+        MySQLがインストールされていません。
+  MySQL:
+    - name: MySQLアクセスできるか確認
+      cmd: echo "SELECT Host, User FROM mysql.user" | mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD}
+      regexp:
+        - type: or
+        - list: ["localhost | root"]
+      working-directory: /var/www/html
+      message: |
+        MySQLにアクセスできません。
+        `sudo os_lecture_support_tool config set`でMySQLのユーザー名(root)とあなたが設定したrootのパスワードを設定してください。
+    - name: MySQLにユーザーを作成されているか確認
+      cmd: echo "SELECT Host, User FROM mysql.user" | mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD}
+      regexp:
+        - type: or
+        - list: ["localhost | webapp"]
+      working-directory: /var/www/html
+      message: |
+        指定されたユーザーが作成されていません。webappユーザーを作成しましょう。
+  MySQL_table_database:
+    - name: データベースが作成されているか確認
+      cmd: echo "show tables from webapp" | mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD}
+      regexp:
+        - type: or
+        - list: ["Tables_in_webapp"]
+      working-directory: /var/www/html
+      message: |
+        webappデータベースが作成されていません。
+    - name: データベースにテーブルが作成されているか確認
+      cmd: echo "show tables from webapp" | mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD}
+      regexp:
+        - type: or
+        - list: ["product"]
+      working-directory: /var/www/html
+      message: |
+        webappデータベースにproductテーブルが作成されていません。
+    - name: productテーブルにアイテムが作成されているか確認
       cmd: echo "select * from webapp.product" | mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD}
-      # 複数の正規表現の「いずれかにマッチ」か「すべてにマッチ」を指定
-      # or または andを指定
-      regexp:
-        - type: or
-        # 正規表現
-        - list: [price, name]
-      # 上記のコマンドを実行するディレクトリを指定
-      working-directory: /var/www
-      # 上記の正規表現にマッチしなかった場合に表示されるヒント(または模範回答)
-      message: |
-        エラー
-        ここに注目１
-    - name: パーミッションを確認２
-      cmd: ls -l
       regexp:
         - type: and
-        - list: [.......r.x, index\.html]
-      working-directory: /var/www
+        - list: ["name", "price"]
+      working-directory: /var/www/html
       message: |
-        エラー
-        ここに注目２
-  capter_02:
-    - name: パーミッションを確認１
-      cmd: ls -l
+        productテーブルにアイテムが作成されていません。
+    - name: webappユーザーの権限を確認
+      cmd: echo "SHOW GRANTS FOR 'webapp'@'localhost'" | mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD}
       regexp:
         - type: and
-        - list: [.......r.x]
-      working-directory: /var/www
+        - list: ["SELECT", "INSERT", "UPDATE", "DELETE", "product"]
+      working-directory: /var/www/html
       message: |
-        エラー
-        ここに注目１
-    - name: パーミッションを確認２
-      cmd: ls -l
+        webappユーザーにproductテーブルを操作するために十分な権限がありません。
+  PHP_get_db_data:
+    - name: php-pdoがインストールされているか確認
+      cmd: apt search php-db
       regexp:
         - type: or
-        - list: [.......r.x, index\.html]
-      working-directory: /var/www
+        - list: ["php-db"]
+      working-directory: /var/www/html
       message: |
-        この項目を確認してみましょう。`chmod`コマンドを用いて解決できます。
-        https://cist-operating-system.netlify.app/os/ec2-tutorial/operation-table-mysql/
-    - name: configを確認
-      cmd: echo ${MYSQL_USER}
+        php-pdoがインストールされていません。aptコマンドを用いてインストールしましょう。
+    - name: php-mysqlがインストールされているか確認
+      cmd: apt search php-mysql
       regexp:
         - type: or
-        - list: ["${MYSQL_USER}"]
-      working-directory: /var/www
+        - list: ["php-mysql"]
+      working-directory: /var/www/html
       message: |
-        エラー
-        ここに注目２
+        php-mysqlがインストールされていません。aptコマンドを用いてインストールしましょう。
+    - name: PHPからDBのデータが取得できるか確認
+      cmd: cat index.php
+      regexp:
+        - type: and
+        - list: ["${MYSQL_USER}", "${MYSQL_PASSWORD}", "mysql", "localhost"]
+      working-directory: /var/www/html
+      message: |
+        PHPファイルに書かれているデータベースの接続に関する部分に問題があります。
