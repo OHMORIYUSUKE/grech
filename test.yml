@@ -132,6 +132,14 @@ check:
       working-directory: /var/www/html
       message: |
         productテーブルにアイテムが作成されていません。
+    - name: productテーブルにapple, 100が挿入されているか確認
+      cmd: echo "select * from webapp.product" | mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD}
+      regexp:
+        - type: and
+        - list: ["apple", "100"]
+      working-directory: /var/www/html
+      message: |
+        productテーブルにapple, 100が挿入されていません。
     - name: webappユーザーの権限を確認
       cmd: echo "SHOW GRANTS FOR 'webapp'@'localhost'" | mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD}
       regexp:
@@ -157,7 +165,7 @@ check:
       working-directory: /var/www/html
       message: |
         php-mysqlがインストールされていません。aptコマンドを用いてインストールしましょう。
-    - name: PHPからDBのデータが取得できるか確認
+    - name: PHPからDBのデータが取得できるか確認(コードの問題かどうか)
       cmd: cat index.php
       regexp:
         - type: and
@@ -165,3 +173,125 @@ check:
       working-directory: /var/www/html
       message: |
         PHPファイルに書かれているデータベースの接続に関する部分に問題があります。
+        PHPのコードを見直しましょう
+    - name: PHPからDBのデータが取得できているか確認
+      cmd: curl localhost/index.php
+      regexp:
+        - type: and
+        - list: ["apple", "100"]
+      working-directory: /var/www/html
+      message: |
+        PHPファイルからデータが取得できていません。
+        MySQLのパスワードとPHPのコード内のパスワードが一致しているか確認しましょう。
+  Appendix(Python(CGI)):
+    - name: Apach の設定を確認
+      cmd: cat 000-default.conf
+      regexp:
+        - type: and
+        - list: [AddHandler *cgi-script, \.py]
+      working-directory: /etc/apache2/sites-enabled
+      message: |
+        Apacheの設定に問題があります。/etc/apache2/sites-enabled/000-default.confを修正しましょう。
+    - name: Pythonのパーミッションを確認
+      cmd: ls -l
+      regexp:
+        - type: and
+        - list: [.......r.x, index\.py]
+      working-directory: /var/www/html
+      message: |
+        Pythonファイルに適切な権限がない可能性があります。chmodコマンドを用いて権限を編集しましょう。
+  Appendix(Perl(CGI)):
+    - name: Apach の設定を確認
+      cmd: cat 000-default.conf
+      regexp:
+        - type: or
+        - list: [AddHandler *cgi-script, \.pl]
+      working-directory: /etc/apache2/sites-enabled
+      message: |
+        Apacheの設定に問題があります。/etc/apache2/sites-enabled/000-default.confを修正しましょう。
+    - name: Perlのパーミッションを確認
+      cmd: ls -l
+      regexp:
+        - type: and
+        - list: [.......r.x, index\.pl]
+      working-directory: /var/www/html
+      message: |
+        Perlファイルに適切な権限がない可能性があります。chmodコマンドを用いて権限を編集しましょう。
+  Appendix(Python(Flask)):
+    - name: flaskがインストールされているか確認
+      cmd: sudo pip list
+      regexp:
+        - type: or
+        - list: ["Flask"]
+      working-directory: /var/www/html
+      message: |
+        flaskがインストールされていません。pipコマンドを用いてインストールしましょう。
+    - name: uWSGIがインストールされているか確認
+      cmd: sudo pip list
+      regexp:
+        - type: or
+        - list: ["uWSGI"]
+      working-directory: /var/www/html
+      message: |
+        uWSGIがインストールされていません。pipコマンドを用いてインストールしましょう。
+    - name: libapache2-mod-wsgi-py3がインストールされているか確認
+      cmd: apt search libapache2-mod-wsgi-py3
+      regexp:
+        - type: or
+        - list: ["libapache2-mod-wsgi-py3"]
+      working-directory: /var/www/html
+      message: |
+        libapache2-mod-wsgi-py3がインストールされていません。aptコマンドを用いてインストールしましょう。
+    - name: uWSGIの設定を確認
+      cmd: cat uwsgi.ini
+      regexp:
+        - type: or
+        - list:
+            [
+              "socket",
+              module *= *main,
+              callable,
+              master *= *True,
+              chdir *= */var/www/html/flask-app/,
+            ]
+      working-directory: /var/www/html/flask-app
+      message: |
+        uWSGIの設定に誤りがあります。/var/www/html/flask-app/uwsgi.iniを修正しましょう。
+    - name: Apacheの設定を確認
+      cmd: cat flask.conf
+      regexp:
+        - type: or
+        - list:
+            [
+              LoadModule *proxy_uwsgi_module /usr/lib/apache2/modules/mod_proxy_uwsgi.so,
+              LoadModule *proxy_module /usr/lib/apache2/modules/mod_proxy.so,
+              "ProxyPass",
+              "ProxyPassReverse",
+            ]
+      working-directory: /etc/apache2/sites-enabled
+      message: |
+        Apacheの設定に誤りがあります。uWSGIが利用できるように、/etc/apache2/sites-enabled/flask.confを修正しましょう。
+    - name: Pythonのコードを確認
+      cmd: curl localhost/flask/
+      regexp:
+        - type: or
+        - list: ["message", "apple"]
+      working-directory: /var/www/html/flask-app
+      message: |
+        Pythonのコードに誤りがあります。/var/www/html/flask-app/main.pyを修正しましょう。
+    - name: PyMySQLがインストールされているか確認
+      cmd: sudo pip list
+      regexp:
+        - type: or
+        - list: ["PyMySQL"]
+      working-directory: /var/www/html/flask-app
+      message: |
+        PyMySQLがインストールされていません。pipコマンドを用いてインストールしましょう。
+    - name: Pythonのコードを確認(データベースからappleが取得できているか)
+      cmd: curl localhost/flask/
+      regexp:
+        - type: or
+        - list: ["apple"]
+      working-directory: /var/www/html/flask-app
+      message: |
+        Pythonのコードに誤りがあります。/var/www/html/flask-app/main.pyを修正しましょう。
