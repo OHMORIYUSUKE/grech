@@ -9,14 +9,22 @@ config:
 
 # ユーザーの設定が正しいかを確認するためのシナリオ
 check:
-  # chapter_01などの値は、シナリオ設定者が項目ごとに分割するために設定する
+  # Apache2などの値は、シナリオ設定者が項目ごとに分割するために設定する
   Apache2:
+    # Apache2 内でテストする項目を記載する
+    # name : 確認項目の名前
     - name: Apacheがインストールできているか確認
+      # 確認するためのコマンド
       cmd: apache2 -v
+      # 複数の正規表現の「いずれかにマッチ」か「すべてにマッチ」を指定
+      # or または andを指定
       regexp:
         - type: or
+        # 正規表現
         - list: ["Server version: Apache/"]
+      # 上記のコマンドを実行するディレクトリを指定
       working-directory: /home/ubuntu
+      # 上記の正規表現にマッチしなかった場合に表示されるヒント
       message: |
         Apacheが正常にインストールできていない可能性があります。
     - name: Apacheが起動できているか確認1
@@ -85,8 +93,8 @@ check:
     - name: MySQLアクセスできるか確認
       cmd: echo "SELECT Host, User FROM mysql.user" | mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD}
       regexp:
-        - type: or
-        - list: ["localhost | root"]
+        - type: and
+        - list: ["localhost", "root"]
       working-directory: /var/www/html
       message: |
         MySQLにアクセスできません。
@@ -94,8 +102,8 @@ check:
     - name: MySQLにユーザーを作成されているか確認
       cmd: echo "SELECT Host, User FROM mysql.user" | mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD}
       regexp:
-        - type: or
-        - list: ["localhost | webapp"]
+        - type: and
+        - list: ["localhost", "webapp"]
       working-directory: /var/www/html
       message: |
         指定されたユーザーが作成されていません。webappユーザーを作成しましょう。
@@ -153,7 +161,7 @@ check:
       cmd: cat index.php
       regexp:
         - type: and
-        - list: ["${MYSQL_USER}", "${MYSQL_PASSWORD}", "mysql", "localhost"]
+        - list: ["webapp", "mysql", "localhost"]
       working-directory: /var/www/html
       message: |
         PHPファイルに書かれているデータベースの接続に関する部分に問題があります。
