@@ -177,11 +177,11 @@ class Check:
                 if data2["regexp"][0]["type"] == "and":
                     regexp_string = ""
                     for i, data3 in enumerate(data2["regexp"][1]["list"]):
-                        regexp_string = regexp_string + " | grep " + data3
+                        regexp_string = regexp_string + " | grep '" + data3 + "'"
                 elif data2["regexp"][0]["type"] == "or":
                     regexp_string = " | grep"
                     for i, data3 in enumerate(data2["regexp"][1]["list"]):
-                        regexp_string = regexp_string + " -e " + data3
+                        regexp_string = regexp_string + " -e " + "'" + data3 + "'"
                 command_response = Lib().check_status(working_directory=data2["working-directory"]  ,command=Lib().change_env_value(data2["cmd"]), regexp=Lib().change_env_value(regexp_string))
                 if command_response["out"]:
                     result_message = Text()
