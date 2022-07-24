@@ -94,6 +94,7 @@ class Check:
             print("設定が読み込めませんでした。")
             sys.exit(1)
         # 結果
+        print("実行中です...")
         score_sum = 0
         score = 0
         table_score = Table(title="スコア", show_lines=True)
@@ -134,14 +135,18 @@ class Check:
                 else:
                     result_message = Text()
                     result_message.append(f"間違っています...\n💡\n{data2['message']}", style="bold red")
-                    score_name = result_name + "\n" + score_name
+                    score_name = score_name + result_name + "\n"
                 if debug:
                     result_cmd = "$ " + command_response["run_cmd"] + "\n" + command_response["out"] + command_response["error"]
                     table.add_row(data, result_name, result_cmd, result_message)
                 else:
                     table.add_row(data, result_name, result_message)
                 score_sum = score_sum + 1
-            table_score.add_row(data, score_name, str(score) + " / " + str(score_sum))
+            if score == score_sum:
+                score_message = "⭕"
+            else:
+                score_message = "❌"
+            table_score.add_row(data, score_name, str(score) + " / " + str(score_sum) + "\n" + score_message)
         console = Console()
         console.print(table)
         # 結果
@@ -150,7 +155,7 @@ class Check:
         sys.exit(0)
 
     def chapter(self, name="", debug=0):
-        """任意のチャプターまで終了しているか確認します。(--n {チャプター名})"""
+        """指定のチャプターが完了しているか確認します(--n チャプター名)"""
         try:
             new_dir_path = "/etc/os_lecture_support_tool"
             config = configparser.ConfigParser()
@@ -161,42 +166,43 @@ class Check:
             sys.exit(1)
         yaml_data = yaml.safe_load(obj)
         # print(json.dumps(yaml_data, indent = 2, ensure_ascii=False))
-        table = Table(title=f"{name} までの結果", show_lines=True)
+        print("実行中です...")
+        table = Table(title=f"{name} の結果", show_lines=True)
         table.add_column("チャプター", justify="right", style="white", no_wrap=True)
         table.add_column("項目", style="cyan", no_wrap=True)
         if debug:
             table.add_column("コマンド", style="magenta")
         table.add_column("コメント", style="green", overflow="fold")
         for data in yaml_data["check"].keys():
-            result_name = ""
-            result_cmd = ""
-            result_message = ""
-            for data2 in yaml_data["check"][data]:
-                result_name = data2["name"]
-                regexp_string = ""
-                if data2["regexp"][0]["type"] == "and":
-                    regexp_string = ""
-                    for i, data3 in enumerate(data2["regexp"][1]["list"]):
-                        regexp_string = regexp_string + " | grep '" + data3 + "'"
-                elif data2["regexp"][0]["type"] == "or":
-                    regexp_string = " | grep"
-                    for i, data3 in enumerate(data2["regexp"][1]["list"]):
-                        regexp_string = regexp_string + " -e " + "'" + data3 + "'"
-                command_response = Lib().check_status(working_directory=data2["working-directory"]  ,command=Lib().change_env_value(data2["cmd"]), regexp=Lib().change_env_value(regexp_string))
-                if command_response["out"]:
-                    result_message = Text()
-                    result_message.append("よくできました!", style="bold green")
-                else:
-                    result_message = Text()
-                    result_message.append(f"間違っています...\n💡\n{data2['message']}", style="bold red")
-                if debug:
-                    result_cmd = "$ " + command_response["run_cmd"] + "\n" + command_response["out"] + command_response["error"]
-                    table.add_row(data, result_name, result_cmd, result_message)
-                else:
-                    table.add_row(data, result_name, result_message)
             if name == data:
+                result_name = ""
+                result_cmd = ""
+                result_message = ""
+                for data2 in yaml_data["check"][data]:
+                    result_name = data2["name"]
+                    regexp_string = ""
+                    if data2["regexp"][0]["type"] == "and":
+                        regexp_string = ""
+                        for i, data3 in enumerate(data2["regexp"][1]["list"]):
+                            regexp_string = regexp_string + " | grep '" + data3 + "'"
+                    elif data2["regexp"][0]["type"] == "or":
+                        regexp_string = " | grep"
+                        for i, data3 in enumerate(data2["regexp"][1]["list"]):
+                            regexp_string = regexp_string + " -e " + "'" + data3 + "'"
+                    command_response = Lib().check_status(working_directory=data2["working-directory"]  ,command=Lib().change_env_value(data2["cmd"]), regexp=Lib().change_env_value(regexp_string))
+                    if command_response["out"]:
+                        result_message = Text()
+                        result_message.append("よくできました!", style="bold green")
+                    else:
+                        result_message = Text()
+                        result_message.append(f"間違っています...\n💡\n{data2['message']}", style="bold red")
+                    if debug:
+                        result_cmd = "$ " + command_response["run_cmd"] + "\n" + command_response["out"] + command_response["error"]
+                        table.add_row(data, result_name, result_cmd, result_message)
+                    else:
+                        table.add_row(data, result_name, result_message)
                 console = Console()
-                console.print(table)
+                console.print(table)                
         sys.exit(0)
 
 class Command:

@@ -22,4 +22,4 @@ requires = ["poetry>=1.00", "setuptools"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-os_lecture_support_tool = "os_lecture_support_tool.main:main"
+shtest = "os_lecture_support_tool.main:main"
