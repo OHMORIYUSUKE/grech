@@ -6,6 +6,12 @@ $ poetry install
 $ poetry run os_lecture_support_tool
 ```
 
+## フォーマット
+
+```sh
+$ poetry run black .
+```
+
 ```sh
 $ sudo apt install python3-pip
 $ sudo pip3 install https://github.com/OHMORIYUSUKE/OS-lecture-Support-tool/blob/release/OS_lecture_Support_tool-0.1.0-py3-none-any.whl?raw=true
