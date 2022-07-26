@@ -16,6 +16,10 @@ import re
 from os_lecture_support_tool.lib.lib import Lib
 
 
+from os_lecture_support_tool.UseCase.config.ReadConfig import ReadConfig
+from os_lecture_support_tool.Views.ViewConfig import ViewConfig
+
+
 class Config:
     """設定を行います。"""
 
@@ -74,19 +78,12 @@ class Config:
             sys.exit(1)
 
     def check(self):
-        new_dir_path = "/etc/os_lecture_support_tool"
-        config = configparser.ConfigParser()
-        config.read(f"{new_dir_path}/config.ini")
-        table = Table(title="設定内容", show_lines=True)
-        table.add_column("項目", justify="right", style="cyan", no_wrap=True)
-        table.add_column("値", style="magenta")
         try:
-            for data in config["user"]:
-                result_name = data
-                result_value = config["user"][data]
-                table.add_row(result_name, result_value)
+            user_config_list = ReadConfig.read_config_all(self)
+            table = ViewConfig.view(self, user_config_list=user_config_list)
             console = Console()
             console.print(table)
+            sys.exit(0)
         except:
             print(colored("設定がされていません。", "red"))
             sys.exit(1)
