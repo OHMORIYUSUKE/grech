@@ -79,11 +79,10 @@ class Config:
 
     def check(self):
         try:
-            user_config_list = ReadConfig.read_config_all(self)
-            table = ViewConfig.view(self, user_config_list=user_config_list)
+            user_config_list = ReadConfig().read_config_all()
+            table = ViewConfig().view(user_config_list=user_config_list)
             console = Console()
             console.print(table)
-            sys.exit(0)
         except:
             print(colored("設定がされていません。", "red"))
             sys.exit(1)
