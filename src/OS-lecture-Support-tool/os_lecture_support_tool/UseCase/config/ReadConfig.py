@@ -11,7 +11,7 @@ class ReadConfig:
     def read_config_all(self) -> UserConfigList:
         config_list = []
         for data in self.config["user"]:
-            value = ReadConfig().read_config(name=data)
+            value = self.read_config(name=data)
             config_list.append(UserConfig(name=data, value=value.value))
         list_data = UserConfigList(list=config_list)
         return list_data

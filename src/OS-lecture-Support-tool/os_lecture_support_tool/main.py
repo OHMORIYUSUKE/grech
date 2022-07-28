@@ -25,6 +25,7 @@ from os_lecture_support_tool.UseCase.test.RunAllTest import RunAllTest
 
 from os_lecture_support_tool.UseCase.score.TotallingScore import TotallingScore
 from os_lecture_support_tool.UseCase.test.RunChapterTest import RunChapterTest
+from os_lecture_support_tool.UseCase.config.SetConfig import SetConfig
 
 
 class Config:
@@ -32,57 +33,13 @@ class Config:
 
     def set(self, file=""):
         """チェックする項目が記載されたYAMLファイルの場所を設定します。 --set {URL}"""
-        config = configparser.ConfigParser()
-        config_list = {}
-        new_dir_path = "/etc/os_lecture_support_tool"
-        config.read(f"{new_dir_path}/config.ini")
-        try:
-            # 初回実行時(引数なしは例外)
-            obj = Lib().open_yaml(file_path=file)
-            config_list["yaml"] = file
-        except:
-            if not file:
-                try:
-                    # ２回目以降
-                    obj = Lib().open_yaml(file_path=config["user"]["yaml"])
-                    config_list["yaml"] = config["user"]["yaml"]
-                except:
-                    # 初回実行時(引数なしは例外)(ここにジャンプ)
-                    print(
-                        colored(
-                            "❗初回設定時は`os_lecture_support_tool config set {yamlのURL}`を実行してください❗",
-                            "red",
-                        )
-                    )
-                    sys.exit(1)
-        yaml_data = yaml.safe_load(obj)
-        print(colored("❗入力せずにEnterを入力した場合は、すでに設定されている値に設定されます❗", "yellow"))
-        for data in yaml_data["config"]:
-            config_data = ""
-            try:
-                config_data = config["user"][data]
-            except:
-                config_data = "未設定"
-            config_string = input(
-                f"{data}を入力してください(デフォルト:{yaml_data['config'][data]}, 現在の設定:{config_data}):"
-            )
-            if not config_string:
-                try:
-                    config_string = config["user"][data]
-                except:
-                    config_string = yaml_data["config"][data]
-            config_list[data] = config_string.replace("%", "%%")
-        config["user"] = config_list
-        try:
-            new_dir_path = "/etc/os_lecture_support_tool"
-            if not os.path.exists(new_dir_path):
-                os.makedirs(new_dir_path)
-            f = open(f"{new_dir_path}/config.ini", "w")
-            config.write(f)
-            print(colored("設定を保存しました", "green"))
-            sys.exit(0)
-        except:
-            sys.exit(1)
+        print("入力しない場合は、デフォルト値または、すでに設定されている値になります。")
+        SetConfig().check_exist_config_file(file_path=file)
+        user_config_list = ReadConfig().read_config_all()
+        table = ViewConfig().view(user_config_list=user_config_list)
+        console = Console()
+        console.print(table)
+        print("上記の内容で、設定を保存しました。")
 
     def check(self):
         try:
