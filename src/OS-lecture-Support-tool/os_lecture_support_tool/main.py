@@ -24,6 +24,7 @@ from os_lecture_support_tool.Views.ViewResult import ViewResult
 from os_lecture_support_tool.UseCase.test.RunAllTest import RunAllTest
 
 from os_lecture_support_tool.UseCase.score.TotallingScore import TotallingScore
+from os_lecture_support_tool.UseCase.test.RunChapterTest import RunChapterTest
 
 
 class Config:
@@ -124,67 +125,30 @@ class Check:
             print("よく頑張りました。")
 
     def chapter(self, name="", debug=0):
-        """指定のチャプターが完了しているか確認します(--n チャプター名)"""
-        try:
-            new_dir_path = "/etc/os_lecture_support_tool"
-            config = configparser.ConfigParser()
-            config.read(f"{new_dir_path}/config.ini")
-            obj = Lib().open_yaml(file_path=config["user"]["yaml"])
-        except:
-            print("設定が読み込めませんでした。")
-            sys.exit(1)
-        yaml_data = yaml.safe_load(obj)
-        # print(json.dumps(yaml_data, indent = 2, ensure_ascii=False))
-        print("実行中です...")
-        table = Table(title=f"{name} の結果", show_lines=True)
-        table.add_column("チャプター", justify="right", style="white", no_wrap=True)
-        table.add_column("項目", style="cyan", no_wrap=True)
-        if debug:
-            table.add_column("コマンド", style="magenta")
-        table.add_column("コメント", style="green", overflow="fold")
-        for data in yaml_data["check"].keys():
-            if name == data:
-                result_name = ""
-                result_cmd = ""
-                result_message = ""
-                for data2 in yaml_data["check"][data]:
-                    result_name = data2["name"]
-                    regexp_string = ""
-                    if data2["regexp"][0]["type"] == "and":
-                        regexp_string = ""
-                        for i, data3 in enumerate(data2["regexp"][1]["list"]):
-                            regexp_string = regexp_string + " | grep '" + data3 + "'"
-                    elif data2["regexp"][0]["type"] == "or":
-                        regexp_string = " | grep"
-                        for i, data3 in enumerate(data2["regexp"][1]["list"]):
-                            regexp_string = regexp_string + " -e " + "'" + data3 + "'"
-                    command_response = Lib().check_status(
-                        working_directory=data2["working-directory"],
-                        command=Lib().change_env_value(data2["cmd"]),
-                        regexp=Lib().change_env_value(regexp_string),
-                    )
-                    if command_response["out"]:
-                        result_message = Text()
-                        result_message.append("よくできました!", style="bold green")
-                    else:
-                        result_message = Text()
-                        result_message.append(
-                            f"間違っています...\n💡\n{data2['message']}", style="bold red"
-                        )
-                    if debug:
-                        result_cmd = (
-                            "$ "
-                            + command_response["run_cmd"]
-                            + "\n"
-                            + command_response["out"]
-                            + command_response["error"]
-                        )
-                        table.add_row(data, result_name, result_cmd, result_message)
-                    else:
-                        table.add_row(data, result_name, result_message)
-                console = Console()
-                console.print(table)
-        sys.exit(0)
+        """指定のチャプターが完了しているか確認します(--name チャプター名)"""
+        print("実行中...")
+        test_result_table_data = RunChapterTest().run_test_chapter(chapter_name=name)
+        if debug == 1:
+            table = ViewResult(debug_mode=True).view(
+                test_result_table_data=test_result_table_data
+            )
+        else:
+            table = ViewResult(debug_mode=False).view(
+                test_result_table_data=test_result_table_data
+            )
+        console = Console()
+        console.print(table)
+        # スコア
+        score_table_data = TotallingScore().totalling_score(
+            test_result_table_data=test_result_table_data
+        )
+        score_table = ViewScore().view(score_table_data=score_table_data)
+        console = Console()
+        console.print(score_table)
+        if score_table_data.status == False:
+            print("見直しましょう。")
+        else:
+            print("よく頑張りました。")
 
 
 class Command:
