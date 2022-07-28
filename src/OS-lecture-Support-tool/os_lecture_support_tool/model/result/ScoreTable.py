@@ -12,3 +12,4 @@ class ScoreRow(BaseModel):
 # スコア結果
 class ScoreTable(BaseModel):
     result: List[ScoreRow]
+    status: bool  # すべてのテストを通過したか

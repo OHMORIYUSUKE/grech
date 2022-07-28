@@ -23,6 +23,8 @@ from os_lecture_support_tool.Views.ViewResult import ViewResult
 
 from os_lecture_support_tool.UseCase.test.RunAllTest import RunAllTest
 
+from os_lecture_support_tool.UseCase.score.TotallingScore import TotallingScore
+
 
 class Config:
     """設定を行います。"""
@@ -98,16 +100,28 @@ class Check:
     def all(self, debug=0):
         """すべての課題が終了しているか確認します。"""
         print("実行中...")
+        test_result_table_data = RunAllTest().run_test_all()
         if debug == 1:
             table = ViewResult(debug_mode=True).view(
-                test_result_table_data=RunAllTest().run_test_all()
+                test_result_table_data=test_result_table_data
             )
         else:
             table = ViewResult(debug_mode=False).view(
-                test_result_table_data=RunAllTest().run_test_all()
+                test_result_table_data=test_result_table_data
             )
         console = Console()
         console.print(table)
+        # スコア
+        score_table_data = TotallingScore().totalling_score(
+            test_result_table_data=test_result_table_data
+        )
+        score_table = ViewScore().view(score_table_data=score_table_data)
+        console = Console()
+        console.print(score_table)
+        if score_table_data.status == False:
+            print("見直しましょう。")
+        else:
+            print("よく頑張りました。")
 
     def chapter(self, name="", debug=0):
         """指定のチャプターが完了しているか確認します(--n チャプター名)"""
