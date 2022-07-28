@@ -1,22 +1,21 @@
 from typing import List
-from os_lecture_support_tool.model.config.UserConfig import UserConfig, UserConfigList
-from os_lecture_support_tool.UseCase.config.SetUp import SetUp
+from os_lecture_support_tool.Model.config.UserConfig import UserConfig, UserConfigList
+from os_lecture_support_tool.UseCase.config.ConfigSetUp import ConfigSetUp
 
 
 class ReadConfig:
     def __init__(self) -> None:
+        self.config = ConfigSetUp().init()
         pass
 
     def read_config_all(self) -> UserConfigList:
         config_list = []
-        config = SetUp.init(self=self)
-        for data in config["user"]:
-            value = ReadConfig.read_config(self=self, name=data)
+        for data in self.config["user"]:
+            value = ReadConfig().read_config(name=data)
             config_list.append(UserConfig(name=data, value=value.value))
         list_data = UserConfigList(list=config_list)
         return list_data
 
     def read_config(self, name: str) -> UserConfig:
-        config = SetUp.init(self=self)
-        value = config["user"][name]
+        value = self.config["user"][name]
         return UserConfig(name=name, value=value)

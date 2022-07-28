@@ -2,7 +2,7 @@ from typing import List
 from pydantic import BaseModel
 
 
-class Row(BaseModel):
+class ScoreRow(BaseModel):
     chapter: str
     name: List[str]
     score: int
@@ -11,4 +11,4 @@ class Row(BaseModel):
 
 # スコア結果
 class ScoreTable(BaseModel):
-    result: List[Row]
+    result: List[ScoreRow]

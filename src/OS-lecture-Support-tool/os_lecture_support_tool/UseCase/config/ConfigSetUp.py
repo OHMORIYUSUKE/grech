@@ -1,7 +1,7 @@
 import configparser
 
 
-class SetUp:
+class ConfigSetUp:
     def __init__(self) -> None:
         pass
 
