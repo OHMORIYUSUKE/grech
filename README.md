@@ -1,6 +1,8 @@
 # grech
 
-![logo](./docs/images/grech_logo.png)
+<div align="center">
+<img width="70%" src="./docs/images/grich_logo.png" alt="logo" title="logo">
+</div>
 
 ```sh
 $ docker exec -it grech bash
