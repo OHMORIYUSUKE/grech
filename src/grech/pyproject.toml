@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "OS-lecture-Support-tool"
+name = "grech"
 version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+description = "The yaml file can be freely written, and regular expressions can be tested using shell. In addition, when the test fails, an arbitrary message can be output."
+authors = ["Yusuke Ohmori <you@example.com>"]
 packages = [
-    { include = "os_lecture_support_tool" },
-    { include = "os_lecture_support_tool/**/*.py" },
+    { include = "grech" },
+    { include = "grech/**/*.py" },
 ]
 
 [tool.poetry.dependencies]
@@ -24,4 +24,4 @@ requires = ["poetry>=1.00", "setuptools"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-shtest = "os_lecture_support_tool.main:main"
+grech = "grech.main:main"

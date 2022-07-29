@@ -4,7 +4,7 @@ import sys
 import yaml
 from termcolor import colored
 
-from os_lecture_support_tool.UseCase.config.ConfigSetUp import ConfigSetUp
+from grech.UseCase.config.ConfigSetUp import ConfigSetUp
 
 
 class TestSetUp:

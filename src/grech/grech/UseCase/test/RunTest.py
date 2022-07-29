@@ -4,13 +4,13 @@ import subprocess, sys, re
 import yaml
 from subprocess import PIPE, TimeoutExpired
 
-from os_lecture_support_tool.UseCase.test.TestSetUp import TestSetUp
+from grech.UseCase.test.TestSetUp import TestSetUp
 
-from os_lecture_support_tool.Model.test.CmdResult import CmdResult
-from os_lecture_support_tool.Model.test.Test import Test, Regexp
-from os_lecture_support_tool.Model.result.TestResultTable import TestResultRow
+from grech.Model.test.CmdResult import CmdResult
+from grech.Model.test.Test import Test, Regexp
+from grech.Model.result.TestResultTable import TestResultRow
 
-from os_lecture_support_tool.UseCase.config.ReadConfig import ReadConfig
+from grech.UseCase.config.ReadConfig import ReadConfig
 
 
 class RunTest:

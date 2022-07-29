@@ -3,7 +3,7 @@ version: "3.0"
 services:
   app:
     build: ./src
-    container_name: OS-lecture-Support-tool
+    container_name: grech
     restart: always
     tty: true
     volumes:

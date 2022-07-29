@@ -1,16 +1,17 @@
 from typing import Any, List
-from os_lecture_support_tool.Model.config.UserConfig import UserConfig, UserConfigList
+from grech.Model.config.UserConfig import UserConfig, UserConfigList
 
-from os_lecture_support_tool.UseCase.config.ConfigSetUp import ConfigSetUp
+from grech.UseCase.config.ConfigSetUp import ConfigSetUp
 
 import urllib.request, urllib.error
 import sys
 import yaml
+import os
 
 
 class SetConfig:
     def __init__(self) -> None:
-        self.config_dir_path = "/etc/os_lecture_support_tool"
+        self.config_dir_path = "/etc/grech"
         pass
 
     def check_exist_config_file(self, file_path: str) -> UserConfigList:
@@ -27,6 +28,7 @@ class SetConfig:
         if file_path == "":
             print("初回設定時はURLを引数に与えてください。`config set http://...yaml`")
             sys.exit(1)
+        os.mkdir(self.config_dir_path)
         config_list = self.__find_config_list_in_yaml(file_path=file_path)
         result_list = []
         for data in config_list:

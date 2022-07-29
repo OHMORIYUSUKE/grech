@@ -3,9 +3,9 @@ import sys
 from termcolor import colored
 from rich.console import Console
 
-from os_lecture_support_tool.UseCase.config.ReadConfig import ReadConfig
-from os_lecture_support_tool.Views.ViewConfig import ViewConfig
-from os_lecture_support_tool.UseCase.config.SetConfig import SetConfig
+from grech.UseCase.config.ReadConfig import ReadConfig
+from grech.Views.ViewConfig import ViewConfig
+from grech.UseCase.config.SetConfig import SetConfig
 
 
 class Config:

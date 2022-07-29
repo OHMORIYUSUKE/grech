@@ -4,7 +4,7 @@ from rich.text import Text
 from rich.console import Console
 from rich.table import Table
 
-from os_lecture_support_tool.Model.result.ScoreTable import ScoreTable
+from grech.Model.result.ScoreTable import ScoreTable
 
 
 class ViewScore:

@@ -1,8 +1,8 @@
-from os_lecture_support_tool.Model.testInfo.TestInfo import TestInfo
-from os_lecture_support_tool.UseCase.testinfo.ReadTestInfo import ReadTestInfo
-from os_lecture_support_tool.Views.ViewTestInfo import ViewTestInfo
-
 from rich.console import Console
+
+from grech.Model.testInfo.TestInfo import TestInfo
+from grech.UseCase.testinfo.ReadTestInfo import ReadTestInfo
+from grech.Views.ViewTestInfo import ViewTestInfo
 
 
 class Info:

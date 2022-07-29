@@ -1,5 +1,5 @@
-from os_lecture_support_tool.Model.result.TestResultTable import TestResultTable
-from os_lecture_support_tool.Model.result.ScoreTable import ScoreTable, ScoreRow
+from grech.Model.result.TestResultTable import TestResultTable
+from grech.Model.result.ScoreTable import ScoreTable, ScoreRow
 
 
 class TotallingScore:

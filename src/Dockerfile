@@ -16,6 +16,6 @@ ENV PATH /root/.local/bin:$PATH
 
 ENV PYTHONDONTWRITEBYTECODE 1
 
-WORKDIR /src/app/OS-lecture-Support-tool
+WORKDIR /src/app/grech
 
 RUN poetry config virtualenvs.create true

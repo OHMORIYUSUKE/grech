@@ -3,11 +3,11 @@ import sys
 from termcolor import colored
 from rich.console import Console
 
-from os_lecture_support_tool.Views.ViewScore import ViewScore
-from os_lecture_support_tool.Views.ViewResult import ViewResult
-from os_lecture_support_tool.UseCase.test.RunAllTest import RunAllTest
-from os_lecture_support_tool.UseCase.score.TotallingScore import TotallingScore
-from os_lecture_support_tool.UseCase.test.RunChapterTest import RunChapterTest
+from grech.Views.ViewScore import ViewScore
+from grech.Views.ViewResult import ViewResult
+from grech.UseCase.test.RunAllTest import RunAllTest
+from grech.UseCase.score.TotallingScore import TotallingScore
+from grech.UseCase.test.RunChapterTest import RunChapterTest
 
 
 class Check:

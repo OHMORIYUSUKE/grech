@@ -1,12 +1,12 @@
-from os_lecture_support_tool.Model.result.TestResultTable import (
+from grech.Model.result.TestResultTable import (
     TestResultRow,
     TestResultTable,
 )
-from os_lecture_support_tool.Model.test.Test import Test, Regexp
+from grech.Model.test.Test import Test, Regexp
 
-from os_lecture_support_tool.UseCase.test.TestSetUp import TestSetUp
+from grech.UseCase.test.TestSetUp import TestSetUp
 
-from os_lecture_support_tool.UseCase.test.RunTest import RunTest
+from grech.UseCase.test.RunTest import RunTest
 
 
 class RunAllTest:

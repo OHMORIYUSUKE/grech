@@ -1,6 +1,6 @@
 from typing import List
-from os_lecture_support_tool.Model.config.UserConfig import UserConfig, UserConfigList
-from os_lecture_support_tool.UseCase.config.ConfigSetUp import ConfigSetUp
+from grech.Model.config.UserConfig import UserConfig, UserConfigList
+from grech.UseCase.config.ConfigSetUp import ConfigSetUp
 
 
 class ReadConfig:

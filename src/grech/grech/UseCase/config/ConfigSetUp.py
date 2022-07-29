@@ -9,8 +9,8 @@ class ConfigSetUp:
     def init(self) -> configparser.ConfigParser:
         try:
             config = configparser.ConfigParser()
-            new_dir_path = "/etc/os_lecture_support_tool"
-            config.read(f"{new_dir_path}/config.ini")
+            dir_path = "/etc/grech"
+            config.read(f"{dir_path}/config.ini")
             return config
         except:
             print("設定ファイルが読み込めませんでした。")

@@ -1,5 +1,12 @@
 # このチェック項目の名前
 name: OS-lecture-check
+description: オペレーティングシステムのチェックシナリオ
+# ハンズオンシナリオのURL
+docs_url: https://cist-operating-system.netlify.app/
+# 作者
+author: yusuke-ohmori
+# コピーライト
+copyright: © 2022 yusuke-ohmori
 
 # ユーザーごとに値が異なる場合に、ユーザーに指定してもらう
 config:
@@ -98,7 +105,7 @@ check:
       working-directory: /var/www/html
       message: |
         MySQLにアクセスできません。
-        `sudo os_lecture_support_tool config set`でMySQLのユーザー名(root)とあなたが設定したrootのパスワードを設定してください。
+        `sudo grech config set`でMySQLのユーザー名(root)とあなたが設定したrootのパスワードを設定してください。
     - name: MySQLにユーザーを作成されているか確認
       cmd: echo "SELECT Host, User FROM mysql.user" | mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD}
       regexp:

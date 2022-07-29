@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  PROJECT_DIR: OS-lecture-Support-tool
+  PROJECT_DIR: grech
 
 jobs:
   ci:

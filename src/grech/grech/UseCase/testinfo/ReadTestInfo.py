@@ -1,7 +1,7 @@
 from typing import Union
 from typing import Any
-from os_lecture_support_tool.Model.testInfo.TestInfo import TestInfo
-from os_lecture_support_tool.UseCase.test.TestSetUp import TestSetUp
+from grech.Model.testInfo.TestInfo import TestInfo
+from grech.UseCase.test.TestSetUp import TestSetUp
 
 
 class ReadTestInfo:

@@ -4,7 +4,7 @@ from rich.text import Text
 from rich.console import Console
 from rich.table import Table
 
-from os_lecture_support_tool.Model.config.UserConfig import UserConfigList
+from grech.Model.config.UserConfig import UserConfigList
 
 
 class ViewConfig:
