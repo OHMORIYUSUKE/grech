@@ -1,7 +1,7 @@
 # grech
 
 <div align="center">
-<img width="70%" src="./docs/images/grich_logo.png" alt="logo" title="logo">
+<img width="50%" src="./docs/images/grich_logo.png" alt="logo" title="logo">
 </div>
 
 ```sh
