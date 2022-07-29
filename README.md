@@ -1,5 +1,7 @@
 # grech
 
+![logo](./docs/images/grech_logo.png)
+
 ```sh
 $ docker exec -it grech bash
 $ poetry install
