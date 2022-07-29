@@ -28,5 +28,5 @@ class Config:
             console = Console()
             console.print(table)
         except:
-            print(colored("設定がされていません。", "red"))
+            print("初回設定時はURLを引数に与えてください。`config set http://...yaml`")
             sys.exit(1)
