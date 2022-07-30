@@ -35,8 +35,9 @@ class TotallingScore:
         name_list = []
         for data in test_result_table_data.result:
             if data.chapter == chapter_name:
-                name_list.append(data.name)
                 max_score += 1
+                if data.status == 1:
+                    name_list.append(data.name)
                 if data.status == 0:
                     score += 1
         return ScoreRow(

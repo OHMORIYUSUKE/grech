@@ -15,6 +15,9 @@ class SetConfig:
         pass
 
     def check_exist_config_file(self, file_path: str) -> UserConfigList:
+        # URLが明示されたら初期設定
+        if file_path != "":
+            return self.__set_config_init(file_path=file_path)
         try:
             ConfigSetUp().init()["user"]["yaml"]
             # 2回目以降の設定
@@ -28,7 +31,10 @@ class SetConfig:
         if file_path == "":
             print("初回設定時はURLを引数に与えてください。`config set http://...yaml`")
             sys.exit(1)
-        os.mkdir(self.config_dir_path)
+        try:
+            os.makedirs(self.config_dir_path)
+        except:
+            pass
         config_list = self.__find_config_list_in_yaml(file_path=file_path)
         result_list = []
         for data in config_list:

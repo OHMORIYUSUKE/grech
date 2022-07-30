@@ -30,7 +30,7 @@ class ViewResult:
         table.add_column(self.col_chapter, justify="right", style="white", no_wrap=True)
         table.add_column(self.col_name, style="cyan", no_wrap=True)
         if self.debug_mode:
-            table.add_column(self.col_cmd, style="magenta")
+            table.add_column(self.col_cmd, style="magenta", overflow="fold")
         table.add_column(self.col_message, style="green", overflow="fold")
         if self.debug_mode:
             for data in test_result_table_data.result:
