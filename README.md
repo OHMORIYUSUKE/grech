@@ -1,26 +1,23 @@
 # grech
 
 <div align="center">
-<img width="60%" src="./docs/images/grech_logo.png" alt="logo" title="logo">
+<img width="50%" src="./docs/images/grech_logo.png" alt="logo" title="logo">
 </div>
 
-```sh
-$ docker exec -it grech bash
-$ poetry install
-$ poetry run grech
-```
+## インストール
 
-## フォーマット
+`pip`または`pip3`でインストールできます。
+
+### `pip`
 
 ```sh
-$ poetry run black .
+$ pip install https://github.com/OHMORIYUSUKE/grech/blob/release/grech-0.1.0-py3-none-any.whl?raw=true
 ```
 
-## `pip`
+### `pip3`
 
 ```sh
-$ sudo apt install python3-pip
-$ sudo pip3 install https://github.com/OHMORIYUSUKE/grech/blob/release/OS_lecture_Support_tool-0.1.0-py3-none-any.whl?raw=true
-$ sudo grech
-$ sudo pip3 uninstall grech
+$ pip3 install https://github.com/OHMORIYUSUKE/grech/blob/release/grech-0.1.0-py3-none-any.whl?raw=true
 ```
+
+## 使い方
