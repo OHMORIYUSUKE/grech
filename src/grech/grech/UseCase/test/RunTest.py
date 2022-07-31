@@ -38,12 +38,12 @@ class RunTest:
         else:
             run_cmd = f"cd {test_data.working_directory} && {self.__change_env_value(test_data.cmd)} {self.__change_env_value(regexp_str)}"
         proc = subprocess.run(
-            f"{run_cmd}", timeout=100, shell=True, stdout=PIPE, stderr=PIPE, text=True
+            f"{run_cmd}", timeout=900, shell=True, stdout=PIPE, stderr=PIPE, text=True
         )
-        if proc.stderr == "":
-            return CmdResult(cmd=run_cmd, out_put=proc.stdout, status=0)
-        else:
+        if proc.stderr:
             return CmdResult(cmd=run_cmd, out_put=proc.stderr, status=1)
+        else:
+            return CmdResult(cmd=run_cmd, out_put=proc.stdout, status=0)
 
     def __create_grep(self, regexp_data: Regexp) -> str:
         if regexp_data.type == "and":

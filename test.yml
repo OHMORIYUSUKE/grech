@@ -35,7 +35,7 @@ check:
       message: |
         Apacheが正常にインストールできていない可能性があります。
     - name: Apacheが起動できているか確認1
-      cmd: curl localhost
+      cmd: curl -s localhost
       regexp:
         - type: or
         - list: ["<!DOCTYPE html>"]
@@ -182,7 +182,7 @@ check:
         PHPファイルに書かれているデータベースの接続に関する部分に問題があります。
         PHPのコードを見直しましょう
     - name: PHPからDBのデータが取得できているか確認
-      cmd: curl localhost/index.php
+      cmd: curl -s localhost/index.php
       regexp:
         - type: and
         - list: ["apple", "100"]
@@ -279,7 +279,7 @@ check:
       message: |
         Apacheの設定に誤りがあります。uWSGIが利用できるように、/etc/apache2/sites-enabled/flask.confを修正しましょう。
     - name: Pythonのコードを確認
-      cmd: curl localhost/flask/
+      cmd: curl -s localhost/flask/
       regexp:
         - type: or
         - list: ["message", "apple"]
@@ -295,7 +295,7 @@ check:
       message: |
         PyMySQLがインストールされていません。pipコマンドを用いてインストールしましょう。
     - name: Pythonのコードを確認(データベースからappleが取得できているか)
-      cmd: curl localhost/flask/
+      cmd: curl -s localhost/flask/
       regexp:
         - type: or
         - list: ["apple"]
