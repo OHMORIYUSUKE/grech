@@ -40,10 +40,10 @@ class RunTest:
         proc = subprocess.run(
             f"{run_cmd}", timeout=900, shell=True, stdout=PIPE, stderr=PIPE, text=True
         )
-        if proc.stderr:
-            return CmdResult(cmd=run_cmd, out_put=proc.stderr, status=1)
-        else:
+        if proc.stdout:
             return CmdResult(cmd=run_cmd, out_put=proc.stdout, status=0)
+        else:
+            return CmdResult(cmd=run_cmd, out_put=proc.stderr, status=1)
 
     def __create_grep(self, regexp_data: Regexp) -> str:
         if regexp_data.type == "and":
