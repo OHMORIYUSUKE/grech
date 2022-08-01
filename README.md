@@ -93,7 +93,7 @@ copyright: © 2022 yusuke-ohmori
 ![](./docs/images/config_set.png)
 
 ```sh
-$ gresh config set https://path/to/test.yml
+$ grech config set https://path/to/test.yml
 ```
 
 上記のようなコマンドを実行し、職設定を行ってください。
@@ -103,7 +103,7 @@ $ gresh config set https://path/to/test.yml
 ### 設定を確認
 
 ```sh
-$ gresh config check
+$ grech config check
 ```
 
 ![](./docs/images/config_check.png)
@@ -115,7 +115,7 @@ $ gresh config check
 ![](./docs/images/config_set2.png)
 
 ```sh
-$ gresh config set
+$ grech config set
 ```
 
 ２回目以降の設定は URL を引数に与える必要はありません。
@@ -125,7 +125,7 @@ $ gresh config set
 ### すべてテスト
 
 ```sh
-$ gresh check all
+$ grech check all
 ```
 
 ![](./docs/images/all_1.png)
@@ -136,7 +136,7 @@ $ gresh check all
 ### 項目ごとにテスト
 
 ```sh
-$ gresh check chapter 項目名
+$ grech check chapter 項目名
 ```
 
 ![](./docs/images/check_chapter.png)
@@ -150,7 +150,7 @@ $ gresh check chapter 項目名
 ![](./docs/images/check_chapter_1.png)
 
 ```sh
-$ gresh check chapter 項目名 --debug 1
+$ grech check chapter 項目名 --debug 1
 ```
 
 `--debug 1`を与えることで、どのようなコマンドでテストを行っているのかを確認することができます。
