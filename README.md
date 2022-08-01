@@ -1,5 +1,7 @@
 # grech
 
+[![CI](https://github.com/OHMORIYUSUKE/grech/actions/workflows/ci.yml/badge.svg)](https://github.com/OHMORIYUSUKE/grech/actions/workflows/ci.yml)
+
 <div align="center">
 <img width="50%" src="./docs/images/grech_logo.png" alt="logo" title="logo">
 </div>
