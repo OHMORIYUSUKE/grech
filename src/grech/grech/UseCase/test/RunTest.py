@@ -38,23 +38,20 @@ class RunTest:
         else:
             run_cmd = f"cd {test_data.working_directory} && {self.__change_env_value(test_data.cmd)} {self.__change_env_value(regexp_str)}"
         proc = subprocess.run(
-            f"{run_cmd}", timeout=900, shell=True, stdout=PIPE, stderr=PIPE, text=True
+            run_cmd, timeout=900, shell=True, stdout=PIPE, stderr=PIPE, text=True
         )
-        if proc.stdout:
-            return CmdResult(cmd=run_cmd, out_put=proc.stdout, status=0)
-        else:
-            return CmdResult(cmd=run_cmd, out_put=proc.stderr, status=1)
+        return CmdResult(cmd=run_cmd, out_put=proc.stdout, status=proc.returncode)
 
     def __create_grep(self, regexp_data: Regexp) -> str:
         if regexp_data.type == "and":
             regexp_string = ""
-            for i, data3 in enumerate(regexp_data.list):
-                regexp_string = regexp_string + " | grep '" + data3 + "'"
+            for data in regexp_data.list:
+                regexp_string = regexp_string + " | grep '" + data + "'"
             return regexp_string
         elif regexp_data.type == "or":
             regexp_string = " | grep"
-            for i, data3 in enumerate(regexp_data.list):
-                regexp_string = regexp_string + " -e " + "'" + data3 + "'"
+            for data in regexp_data.list:
+                regexp_string = regexp_string + " -e " + "'" + data + "'"
             return regexp_string
 
     def __change_env_value(self, cmd: str) -> str:
