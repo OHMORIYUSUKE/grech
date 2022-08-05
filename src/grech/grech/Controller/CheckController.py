@@ -35,9 +35,9 @@ class Check:
         console = Console()
         console.print(score_table)
         if score_table_data.status == False:
-            print("見直しましょう。")
+            print("見直しましょう。😭")
         else:
-            print("よく頑張りました。")
+            print("よく頑張りました。🎉")
 
     def chapter(self, name="", debug=0):
         """指定のチャプターが完了しているか確認します(--name チャプター名)"""
@@ -61,6 +61,6 @@ class Check:
         console = Console()
         console.print(score_table)
         if score_table_data.status == False:
-            print("見直しましょう。")
+            print("見直しましょう。😭")
         else:
-            print("よく頑張りました。")
+            print("よく頑張りました。🎉")

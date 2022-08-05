@@ -20,8 +20,13 @@ class RunChapterTest:
         result_rows = []
         for chapter_name_data in yaml_data["check"].keys():
             if chapter_name == chapter_name_data:
-                for test_data in track(yaml_data["check"][chapter_name_data]):
-                    print(f"{test_data['name']} を確認中...")
+                for test_data in track(
+                    yaml_data["check"][chapter_name_data],
+                    description="実行中...🚧",
+                    finished_style="green",
+                    complete_style="green",
+                ):
+                    print(f"・{test_data['name']} を確認中...")
                     test_result = RunTest().run_test(
                         chapter_name=chapter_name_data,
                         test_data=Test(

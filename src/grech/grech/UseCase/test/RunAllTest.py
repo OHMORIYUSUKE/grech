@@ -19,8 +19,13 @@ class RunAllTest:
     def run_test_all(self) -> TestResultTable:
         yaml_data = TestSetUp().init()
         result_rows = []
-        for chapter_name in track(yaml_data["check"].keys()):
-            print(f"{chapter_name} を確認中...")
+        for chapter_name in track(
+            yaml_data["check"].keys(),
+            description="実行中...🚧",
+            finished_style="green",
+            complete_style="green",
+        ):
+            print(f"・{chapter_name} を確認中...")
             for test_data in yaml_data["check"][chapter_name]:
                 test_result = RunTest().run_test(
                     chapter_name=chapter_name,
