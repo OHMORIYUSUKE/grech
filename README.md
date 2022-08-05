@@ -95,12 +95,14 @@ copyright: © 2022 yusuke-ohmori
 ![](./docs/images/config_set.png)
 
 ```sh
-$ grech config set https://path/to/test.yml
+$ sudo grech config set https://path/to/test.yml
 ```
 
 上記のようなコマンドを実行し、職設定を行ってください。
 
 指導者が演習者ごとに設定してほしい値を対話形式で設定します。
+
+> root で実行してください
 
 ### 設定を確認
 
@@ -117,12 +119,14 @@ $ grech config check
 ![](./docs/images/config_set2.png)
 
 ```sh
-$ grech config set
+$ sudo grech config set
 ```
 
 ２回目以降の設定は URL を引数に与える必要はありません。
 
 対話形式で設定を変更することができます。
+
+> root で実行してください
 
 ### すべてテスト
 

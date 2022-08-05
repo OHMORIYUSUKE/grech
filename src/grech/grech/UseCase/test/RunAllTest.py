@@ -1,7 +1,10 @@
+from rich.progress import track
+
 from grech.Model.result.TestResultTable import (
     TestResultRow,
     TestResultTable,
 )
+
 from grech.Model.test.Test import Test, Regexp
 
 from grech.UseCase.test.TestSetUp import TestSetUp
@@ -16,7 +19,8 @@ class RunAllTest:
     def run_test_all(self) -> TestResultTable:
         yaml_data = TestSetUp().init()
         result_rows = []
-        for chapter_name in yaml_data["check"].keys():
+        for chapter_name in track(yaml_data["check"].keys()):
+            print(f"{chapter_name} を確認中...")
             for test_data in yaml_data["check"][chapter_name]:
                 test_result = RunTest().run_test(
                     chapter_name=chapter_name,
