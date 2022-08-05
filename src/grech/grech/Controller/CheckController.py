@@ -39,10 +39,14 @@ class Check:
         else:
             print("よく頑張りました。🎉")
 
-    def chapter(self, name="", debug=0):
+    def chapter(self, debug=0):
         """指定のチャプターが完了しているか確認します(--name チャプター名)"""
+        name = input("チャプター名を入力してください : ")
         print("実行中...")
         test_result_table_data = RunChapterTest().run_test_chapter(chapter_name=name)
+        if test_result_table_data == None:
+            print("指定のチャプターは存在しませんでした。😢")
+            sys.exit(1)
         if debug == 1:
             table = ViewResult(debug_mode=True).view(
                 test_result_table_data=test_result_table_data

@@ -142,14 +142,14 @@ $ grech check all
 ### 項目ごとにテスト
 
 ```sh
-$ grech check chapter 項目名
+$ grech check chapter
 ```
 
 ![](./docs/images/check_chapter.png)
 
 テストしたい項目を指定して、テストを行うことができます。
 
-引数にチェックしたい項目名を指定してください。
+コマンド実行後にチャプター名の入力が求められるので、チェックしたい項目名を指定してください。
 
 #### デバッグモード
 

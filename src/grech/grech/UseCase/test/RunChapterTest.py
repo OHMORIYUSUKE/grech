@@ -1,3 +1,4 @@
+from typing import TypeVar, Union
 from rich.progress import track
 
 from grech.Model.result.TestResultTable import (
@@ -15,7 +16,7 @@ class RunChapterTest:
     def __init__(self) -> None:
         pass
 
-    def run_test_chapter(self, chapter_name: str) -> TestResultTable:
+    def run_test_chapter(self, chapter_name: str) -> Union[TestResultTable, None]:
         yaml_data = TestSetUp().init()
         result_rows = []
         for chapter_name_data in yaml_data["check"].keys():
@@ -49,4 +50,6 @@ class RunChapterTest:
                             status=test_result.status,
                         )
                     )
+        if len(result_rows) == 0:
+            return None
         return TestResultTable(result=result_rows)

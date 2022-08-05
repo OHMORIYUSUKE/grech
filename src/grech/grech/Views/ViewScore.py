@@ -33,7 +33,7 @@ class ViewScore:
     def __list2str(self, list_data: list) -> str:
         str_data = ""
         for data in list_data:
-            str_data += data + "\n"
+            str_data += "・" + data + "\n"
         return str_data
 
     def __all_test_ok(self, score: int, max_score: int) -> str:
