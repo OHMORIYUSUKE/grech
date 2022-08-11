@@ -142,14 +142,12 @@ $ grech check all
 ### 項目ごとにテスト
 
 ```sh
-$ grech check chapter
+$ grech check chapter "チャプター名"
 ```
 
 ![](./docs/images/check_chapter.png)
 
 テストしたい項目を指定して、テストを行うことができます。
-
-コマンド実行後にチャプター名の入力が求められるので、チェックしたい項目名を指定してください。
 
 #### デバッグモード
 
@@ -160,6 +158,20 @@ $ grech check chapter 項目名 --debug 1
 ```
 
 `--debug 1`を与えることで、どのようなコマンドでテストを行っているのかを確認することができます。
+
+### レポート
+
+```sh
+$ grech check report "チャプター名"
+```
+
+指定のチャプターの進捗状況を HTML で出力します。
+
+```sh
+$ grech check report all
+```
+
+すべてのテストの進捗状況を HTML で出力します。
 
 ### テストの情報
 
