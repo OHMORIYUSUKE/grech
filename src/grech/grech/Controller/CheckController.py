@@ -1,10 +1,13 @@
 from fire import Fire
 import sys
+import pandas as pd
+
 from termcolor import colored
 from rich.console import Console
 
 from grech.Views.ViewScore import ViewScore
 from grech.Views.ViewResult import ViewResult
+from grech.Views.ViewResultMdTable import ViewResultMdTable
 from grech.UseCase.test.RunAllTest import RunAllTest
 from grech.UseCase.score.TotallingScore import TotallingScore
 from grech.UseCase.test.RunChapterTest import RunChapterTest
@@ -39,9 +42,8 @@ class Check:
         else:
             print("よく頑張りました。🎉")
 
-    def chapter(self, debug=0):
+    def chapter(self, debug=0, name=""):
         """指定のチャプターが完了しているか確認します(--name チャプター名)"""
-        name = input("チャプター名を入力してください : ")
         print("実行中...")
         test_result_table_data = RunChapterTest().run_test_chapter(chapter_name=name)
         if test_result_table_data == None:
@@ -68,3 +70,26 @@ class Check:
             print("見直しましょう。😭")
         else:
             print("よく頑張りました。🎉")
+
+    def report(self, name="all"):
+        if name == "all":
+            test_result_table_data = RunAllTest().run_test_all()
+            md_table = ViewResultMdTable().view(
+                test_result_table_data=test_result_table_data
+            )
+            html = md_table.to_html(index=False, border=0)
+            print("===================ここから下のHTMLをコピーしてください===================")
+            print(html)
+        else:
+            test_result_table_data = RunChapterTest().run_test_chapter(
+                chapter_name=name
+            )
+            if test_result_table_data == None:
+                print("指定のチャプターは存在しませんでした。😢")
+                sys.exit(1)
+            md_table = ViewResultMdTable().view(
+                test_result_table_data=test_result_table_data
+            )
+            html = md_table.to_html(index=False, border=0)
+            print("===================ここから下のHTMLをコピーしてください===================")
+            print(html)
